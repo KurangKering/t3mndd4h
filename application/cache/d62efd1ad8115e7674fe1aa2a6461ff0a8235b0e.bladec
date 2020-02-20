@@ -80,8 +80,9 @@
 	}
 
 	#container {
- height:600px;
+ height:800px;
 	}
+
 </style>
 <?php $this->stopSection(); ?>
 <?php $this->startSection('content'); ?>
@@ -110,26 +111,30 @@
  <div class="card ">
  <div class="card-body">
  <div class="form-group">
- <label>Status Jemaah</label>
- <select class="form-control select2" name="status">
- <option value="">Semua </option>
- <?php $__currentLoopData = hStatusJemaah(); $this->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
- <option value="<?php echo static::e($k); ?>"><?php echo static::e($v); ?></option>
- <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ <label>Tahun Haji</label>
+ <select class="form-control select2" name="tahun" id="tahun"  >
+ <?php $__currentLoopData = $data['tahun']; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $tahun): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <option value="<?php echo static::e($tahun); ?>"
+ <?php if($tahun == date('Y')): ?>
+ selected
+ <?php endif; ?>
 
+ ><?php echo static::e($tahun); ?></option>
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
  </select>
  </div>
-
+ 
  <div class="form-group">
- <label>Daerah Terbanyak</label>
- <select class="form-control select2" name="top">
+ <label>Usia</label>
+ <select class="form-control select2" name="usia">
  <option value="">Semua </option>
- <?php $__currentLoopData = hTopBesar(); $this->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <?php $__currentLoopData = hUsia(); $this->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
  <option value="<?php echo static::e($k); ?>"><?php echo static::e($v); ?></option>
  <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
 
  </select>
  </div>
+ 
 
  <div class="form-group">
  <label>Jenis Kelamin</label>
@@ -151,15 +156,16 @@
  <div class="card">
  <div class="card-body">
  <div class="form-group">
- <label>Usia</label>
- <select class="form-control select2" name="usia">
+ <label>Daerah Terbanyak</label>
+ <select class="form-control select2" name="top">
  <option value="">Semua </option>
- <?php $__currentLoopData = hUsia(); $this->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <?php $__currentLoopData = hTopBesar(); $this->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
  <option value="<?php echo static::e($k); ?>"><?php echo static::e($v); ?></option>
  <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
 
  </select>
  </div>
+ 
 
  <div class="form-group">
  <label>Kota</label>
@@ -175,20 +181,17 @@
  <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
  </select>
  </div>
+ 
  <div class="form-group">
- <label>Tahun Haji</label>
- <select class="form-control select2" name="tahun" id="tahun"  >
- <?php $__currentLoopData = $data['tahun']; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $tahun): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
- <option value="<?php echo static::e($tahun->haji_tahun); ?>"
- <?php if($tahun->haji_tahun == date('Y')): ?>
- selected
- <?php endif; ?>
-
- ><?php echo static::e($tahun->haji_tahun); ?></option>
+ <label>Status Jemaah</label>
+ <select class="form-control select2" name="status">
+ <option value="">Semua </option>
+ <?php $__currentLoopData = hStatusJemaah(); $this->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <option value="<?php echo static::e($k); ?>"><?php echo static::e($v); ?></option>
  <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+
  </select>
  </div>
-
  </div>
  </div>
  </div>
@@ -212,47 +215,7 @@
  </div>
  </div>
  </div>
- <div class="col-12">
- <div id="accordion-table">
- <div class="accordion">
- <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-2" aria-expanded="true">
- <h4>Table Jemaah Haji</h4>
- </div>
- <div class="accordion-body collapse show" id="panel-body-2" data-parent="#accordion-table">
- <div class="card">
  
- <div class="card-body">
- <div class="table-responsive">
- <table class="table table-hover table-striped" id="table-haji">
- <thead>                                 
- <tr>
-
- <th>No. Paspor</th>
- <th>Tahun</th>
- <th>Nama</th>
- <th>Usia</th>
- <th>Jenis Kelamin</th>
- <th>Status</th>
- <th>Regu</th>
- <th>Rombongan</th>
- <th>Kloter</th>
- <th>Kota</th>
- <th>Provinsi</th>
- </tr>
- </thead>
- <tbody>
-
- </tbody>
- </table>
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
-
-
- </div>
  <div class="col-12">
  <div id="accordion-treemap">
  <div class="accordion">
@@ -286,14 +249,56 @@
  </div>
  </div>
  </div>
- 
+
+ </div>
+
+ <div class="col-12">
+ <div id="accordion-table">
+ <div class="accordion">
+ <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-2" aria-expanded="true">
+ <h4>Table Jemaah Haji</h4>
+ </div>
+ <div class="accordion-body collapse show" id="panel-body-2" data-parent="#accordion-table">
+ <div class="card">
+
+ <div class="card-body">
+ <div class="table-responsive">
+ <table class="table table-hover table-striped" id="table-haji">
+ <thead>                                 
+ <tr>
+
+ <th>No. Porsi</th>
+ <th>Tahun</th>
+ <th>Nama</th>
+ <th>Usia</th>
+ <th>Jenis Kelamin</th>
+ <th>Status</th>
+ <th>Regu</th>
+ <th>Rombongan</th>
+ <th>Kloter</th>
+ <th>Kota</th>
+ <th>Provinsi</th>
+ </tr>
+ </thead>
+ <tbody>
+
+ </tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+ </div>
  </div>
  </div>
 
- </section>
 
- <!-- Modal -->
- <div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+ </div>
+ </div>
+
+	</section>
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
  <div class="modal-dialog  modal-lg" role="document">
  <div class="modal-content">
  <div class="modal-header">
@@ -310,31 +315,32 @@
  <div class="modal-footer"></div>
  </div>
  </div>
- </div>
+	</div>
 
- <?php $this->stopSection(); ?>
- <?php $this->startSection('js-export'); ?>
- <script src="<?php echo static::e(base_url("assets/modules/datatables/datatables.min.js")); ?>"></script>
+	<?php $this->stopSection(); ?>
+	<?php $this->startSection('js-export'); ?>
+	<script src="<?php echo static::e(base_url("assets/modules/datatables/datatables.min.js")); ?>"></script>
 
- <script src="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js")); ?>"></script>
 
- <script src="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/js/dataTables.fixedColumns.min.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/js/dataTables.fixedColumns.min.js")); ?>"></script>
 
- <script src="<?php echo static::e(base_url("assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js")); ?>"></script>
 
- <script src="<?php echo static::e(base_url("assets/modules/highcharts/highcharts.js")); ?>"></script>
- <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/data.js")); ?>"></script>
- <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/heatmap.js")); ?>"></script>
- <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/treemap.js")); ?>"></script>
- <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/offline-exporting.js")); ?>"></script>
- <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/accessibility.js")); ?>"></script>
- <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/boost.js")); ?>"></script>
- <script src="<?php echo static::e(base_url("assets/modules/select2/dist/js/select2.full.min.js")); ?>"></script>
- <script src="<?php echo static::e(base_url("assets/sortablejs-1.10.2/package/Sortable.min.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/highcharts/highcharts.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/data.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/heatmap.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/treemap.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/offline-exporting.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/accessibility.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/boost.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/modules/select2/dist/js/select2.full.min.js")); ?>"></script>
+	<script src="<?php echo static::e(base_url("assets/sortablejs-1.10.2/package/Sortable.min.js")); ?>"></script>
 
- <?php $this->stopSection(); ?>
- <?php $this->startSection('js-inline'); ?>
- <script>
+	<?php $this->stopSection(); ?>
+	<?php $this->startSection('js-inline'); ?>
+	<script>
+
  var example1 = null;
 
  var insHighchart = null;
@@ -367,7 +373,7 @@
  scrollCollapse: true,
  "order": [], 
  "columns": [
- { "data": "haji_nomor_paspor" },
+ { "data": "haji_nomor_porsi" },
  { "data": "haji_tahun" },
  { "data": "haji_nama" },
  { "data": "haji_usia" },
@@ -635,6 +641,6 @@
  return await response.json();
  }
 
- </script>
- <?php $this->stopSection(); ?>
-<?php if (@$_shouldextend[1]) { echo $this->runChild('layouts.layout'); } ?>
+	</script>
+	<?php $this->stopSection(); ?>
+<?php if (@$_shouldextend[1]) { echo $this->runChild('layouts.layout', ['bodyClass' => 'sidebar-mini']); } ?>

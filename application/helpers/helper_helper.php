@@ -145,6 +145,17 @@ if (!function_exists('hKloter')) {
 	function hKloter($data = null) {
 		$arr = array(
 			'2' => 'Kloter 2',
+			'3' => 'Kloter 3',
+			'4' => 'Kloter 4',
+			'5' => 'Kloter 5',
+			'6' => 'Kloter 6',
+			'7' => 'Kloter 7',
+			'8' => 'Kloter 8',
+			'9' => 'Kloter 9',
+			'10' => 'Kloter 10',
+			'18' => 'Kloter 18',
+			'19' => 'Kloter 19',
+			'20' => 'Kloter 20',
 		
 		);
 		if ($data != null) {

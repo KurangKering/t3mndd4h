@@ -6,7 +6,31 @@ class Haji extends CI_Controller
 
     public function index()
     {
-        $data['kota'] = $this->M_Kota->orderBy('kota_nama')->get();
+        $haji = $this->M_Haji->get();
+        $kota = $this->M_Kota->orderBy('kota_nama')->get();
+        $provinsi = $this->M_Provinsi->get();
+        $filterTahun = json_encode($haji->pluck('haji_tahun')->unique()->flatten());
+        $filterJK = json_encode(hJK());
+        $filterStatus = json_encode(hStatusJemaah());
+        $filterRegu = json_encode(hRegu());
+        $filterRombongan = json_encode(hRombongan());
+        $filterKloter = $haji->pluck('haji_kloter_id','haji_kloter_id');
+        $filterKloter = $filterKloter->map(function($q) {
+            return "Kloter {$q}";
+        })->toArray();
+        $filterKloter = json_encode($filterKloter);
+        $filterKota = json_encode($kota->pluck('kota_nama', 'kota_id'));
+        $filterProvinsi = json_encode($provinsi->pluck('provinsi_nama', 'provinsi_id'));
+
+        $data['kota'] = $kota;
+        $data['filterTahun'] = $filterTahun;
+        $data['filterJK'] = $filterJK;
+        $data['filterStatus'] = $filterStatus;
+        $data['filterRegu'] = $filterRegu;
+        $data['filterRombongan'] = $filterRombongan;
+        $data['filterKloter'] = $filterKloter;
+        $data['filterKota'] = $filterKota;
+        $data['filterProvinsi'] = $filterProvinsi;
         return view('haji.index', compact('data'));
     }
 
@@ -119,32 +143,32 @@ class Haji extends CI_Controller
         $json['messages'] = array();
         if (!$this->form_validation->run()) {
             $json['messages'] = array(
-             'nama' => form_error('nama', '<p class="mt-3 text-danger">', '</p>'),
-             'paspor' => form_error('paspor', '<p class="mt-3 text-danger">', '</p>'),
-             'tahun' => form_error('tahun', '<p class="mt-3 text-danger">', '</p>'),
-             'usia' => form_error('usia', '<p class="mt-3 text-danger">', '</p>'),
-             'jk' => form_error('jk', '<p class="mt-3 text-danger">', '</p>'),
-             'status' => form_error('status', '<p class="mt-3 text-danger">', '</p>'),
-             'regu' => form_error('regu', '<p class="mt-3 text-danger">', '</p>'),
-             'rombongan' => form_error('rombongan', '<p class="mt-3 text-danger">', '</p>'),
-             'kloter' => form_error('kloter', '<p class="mt-3 text-danger">', '</p>'),
-             'kota' => form_error('kota', '<p class="mt-3 text-danger">', '</p>'),
-         );
+               'nama' => form_error('nama', '<p class="mt-3 text-danger">', '</p>'),
+               'paspor' => form_error('paspor', '<p class="mt-3 text-danger">', '</p>'),
+               'tahun' => form_error('tahun', '<p class="mt-3 text-danger">', '</p>'),
+               'usia' => form_error('usia', '<p class="mt-3 text-danger">', '</p>'),
+               'jk' => form_error('jk', '<p class="mt-3 text-danger">', '</p>'),
+               'status' => form_error('status', '<p class="mt-3 text-danger">', '</p>'),
+               'regu' => form_error('regu', '<p class="mt-3 text-danger">', '</p>'),
+               'rombongan' => form_error('rombongan', '<p class="mt-3 text-danger">', '</p>'),
+               'kloter' => form_error('kloter', '<p class="mt-3 text-danger">', '</p>'),
+               'kota' => form_error('kota', '<p class="mt-3 text-danger">', '</p>'),
+           );
             $json['messages'] = array_filter($json['messages']);
             $json['success'] = 0;
         } else {
             $postData = array(
-               'haji_nama' => $post['nama'],
-               'haji_nomor_paspor' => $post['paspor'],
-               'haji_tahun' => $post['tahun'],
-               'haji_usia' => $post['usia'],
-               'haji_jk' => $post['jk'],
-               'haji_status_jemaah' => $post['status'],
-               'haji_regu_id' => $post['regu'],
-               'haji_rombongan_id' => $post['rombongan'],
-               'haji_kloter_id' => $post['kloter'],
-               'haji_kota_id' => $post['kota'],
-           );
+             'haji_nama' => $post['nama'],
+             'haji_nomor_paspor' => $post['paspor'],
+             'haji_tahun' => $post['tahun'],
+             'haji_usia' => $post['usia'],
+             'haji_jk' => $post['jk'],
+             'haji_status_jemaah' => $post['status'],
+             'haji_regu_id' => $post['regu'],
+             'haji_rombongan_id' => $post['rombongan'],
+             'haji_kloter_id' => $post['kloter'],
+             'haji_kota_id' => $post['kota'],
+         );
 
             $insertData = $this->M_Haji->insert($postData);
         }
@@ -158,19 +182,21 @@ class Haji extends CI_Controller
     public function jsonDataHaji()
     {
         $this->dt->select('
-           h.haji_id,
-           h.haji_nomor_paspor,
-           h.haji_tahun,
-           h.haji_nama,
-           h.haji_usia,
-           h.haji_kloter_id,
-           h.haji_regu_id,
-           h.haji_rombongan_id,
-           h.haji_jk,
-           h.haji_status_jemaah,
-           ko.kota_nama,
-           pro.provinsi_nama
-           ');
+         h.haji_id,
+         h.haji_nomor_porsi,
+         h.haji_tahun,
+         h.haji_nama,
+         h.haji_usia,
+         h.haji_kloter_id,
+         h.haji_regu_id,
+         h.haji_rombongan_id,
+         h.haji_jk,
+         h.haji_status_jemaah,
+         ko.kota_id,
+         pro.provinsi_id,
+         ko.kota_nama,
+         pro.provinsi_nama
+         ');
         $this->dt->from('haji h');
 
         $this->dt->join('kota ko',
@@ -216,7 +242,20 @@ class Haji extends CI_Controller
             <a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="showModal($1,2)">Hapus</a>'
             , 'haji_id'
         );
-     
+
+
+        $mColArray  = $this->input->post('columns');
+        // $this->dt->filter('haji_tahun', 2020);
+        
+        for ($i = 0; $i < count($mColArray); $i++) {
+
+            if ($mColArray[$i]['searchable'] == 'true' && $mColArray[$i]['search']['value']) {
+
+                $this->dt->filter($mColArray[$i]['name'], $mColArray[$i]['search']['value'] );
+            }
+
+        }
+
         echo $this->dt->generate();
         die();
     }

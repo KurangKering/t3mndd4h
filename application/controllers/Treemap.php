@@ -8,9 +8,13 @@ class Treemap extends CI_Controller
 	static public $MUDA = 1;
 	public function index()
 	{
-		$d = $this->M_Haji->select('haji_tahun')->groupBy('haji_tahun')->get();
+		$d = $this->M_Haji->pluck('haji_tahun')->unique();
+		if (!$d->contains(date('Y'))) {
+			$d->push((int) date('Y'));
+		}
 		$kota = $this->M_Kota->get();
 		$data['tahun'] = $d;
+
 		$data['kota'] = $kota;
 
 		return view('treemap.index', compact('data'));
@@ -381,7 +385,7 @@ class Treemap extends CI_Controller
 			}
 		}
 
-		$dataTable = $dataHaji->map->only(['haji_nomor_paspor',
+		$dataTable = $dataHaji->map->only(['haji_nomor_porsi',
            'haji_tahun',
            'haji_nama',
            'haji_usia',

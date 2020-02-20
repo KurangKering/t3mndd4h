@@ -5,6 +5,13 @@
 <link rel="stylesheet" href="{{ base_url("assets/modules/prism/prism.css") }}">
 
 @endsection
+@section('css-inline')
+<style>
+	.DTFC_LeftFootWrapper {
+		display:none;
+	}
+</style>
+@endsection
 @section('content')
 <section class="section">
 	<div class="section-header">
@@ -46,6 +53,24 @@
 							<tbody>
 
 							</tbody>
+
+							<tfoot>                                 
+								<tr>
+									<th>ID</th>
+									<th>Nomor Porsi</th>
+									<th>Tahun</th>
+									<th>Nama</th>
+									<th>Usia</th>
+									<th>Jenis Kelamin</th>
+									<th>Status</th>
+									<th>Regu</th>
+									<th>Rombongan</th>
+									<th>Kloter</th>
+									<th>Kota</th>
+									<th>Provinsi</th>
+									<th></th>
+								</tr>
+							</tfoot>
 						</table>
 					</div>
 				</div>
@@ -79,7 +104,7 @@
 
 								</div>
 								<div class="form-group">
-									<label for="message-text" class="col-form-label">Nomor Paspor:</label>
+									<label for="message-text" class="col-form-label">Nomor Porsi:</label>
 									<input type="text"  id="paspor" class="form-control">
 									<div class="error"></div>
 
@@ -205,6 +230,16 @@
 	let $kloter = null;
 	let $kota = null;
 	let $id = null;
+
+
+	let filterTahun = JSON.parse("{{ $data['filterTahun'] }}");
+	let filterJK = JSON.parse("{{ $data['filterJK'] }}".replace(/&quot;/g, '"'))	
+	let filterStatus = JSON.parse("{{ $data['filterStatus'] }}".replace(/&quot;/g, '"'))	
+	let filterRegu = JSON.parse("{{ $data['filterRegu'] }}".replace(/&quot;/g, '"'))	
+	let filterRombongan = JSON.parse("{{ $data['filterRombongan'] }}".replace(/&quot;/g, '"'))	
+	let filterKloter = JSON.parse("{{ $data['filterKloter'] }}".replace(/&quot;/g, '"'))	
+	let filterKota = JSON.parse("{{ $data['filterKota'] }}".replace(/&quot;/g, '"'))	
+	let filterProvinsi = JSON.parse("{{ $data['filterProvinsi'] }}".replace(/&quot;/g, '"'))	
 	$(function() {
 		$modalDetail = $("#modalDetail");
 		$btnTambah = $("#btn-tambah");
@@ -220,6 +255,89 @@
 		$kloter = $("#kloter");
 		$kota = $("#kota");
 		$id = $("#id");
+		$('#table-haji tfoot th').each( function ($index) {
+
+			var title = $(this).text();
+			
+			var select = $('<select><option value="">Semua '+title+'</option></select>')
+
+			if ($index == 2) {
+
+				for (var i = 0; i < filterTahun.length; i++) {
+					select.append( '<option value="'+filterTahun[i]+'">'+filterTahun[i]+'</option>' )	
+				}
+
+			}
+			else if ($index == 5) {
+
+				var value = Object.keys(filterJK);
+
+				for (var i = 0; i < value.length; i++) {
+					select.append( '<option value="'+value[i]+'">'+filterJK[value[i]]+'</option>' )	
+				}
+
+			}
+
+			else if ($index == 6) {
+				var value = Object.keys(filterStatus);
+
+				for (var i = 0; i < value.length; i++) {
+					select.append( '<option value="'+value[i]+'">'+filterStatus[value[i]]+'</option>' )	
+				}
+
+			}
+			else if ($index == 7) {
+				var value = Object.keys(filterRegu);
+
+				for (var i = 0; i < value.length; i++) {
+					select.append( '<option value="'+value[i]+'">'+filterRegu[value[i]]+'</option>' )	
+				}
+
+			}
+
+			else if ($index == 8) {
+				var value = Object.keys(filterRombongan);
+
+				for (var i = 0; i < value.length; i++) {
+					select.append( '<option value="'+value[i]+'">'+filterRombongan[value[i]]+'</option>' )	
+				}
+
+			}
+			else if ($index == 9) {
+				var value = Object.keys(filterKloter);
+
+				for (var i = 0; i < value.length; i++) {
+					select.append( '<option value="'+value[i]+'">'+filterKloter[value[i]]+'</option>' )	
+				}
+
+			}
+			else if ($index == 10) {
+
+				var value = Object.keys(filterKota);
+
+				for (var i = 0; i < value.length; i++) {
+					select.append( '<option value="'+value[i]+'">'+filterKota[value[i]]+'</option>' )	
+				}
+
+			}
+			else if ($index == 11) {
+
+				var value = Object.keys(filterProvinsi);
+
+				for (var i = 0; i < value.length; i++) {
+					select.append( '<option value="'+value[i]+'">'+filterProvinsi[value[i]]+'</option>' )	
+				}
+			} else if ($index == 12) {
+				return;
+			} 
+			else {
+				$(this).html( '<input type="text" placeholder="Cari '+title+'" />' );
+				return;
+			}
+			$(this).html( select );
+
+
+		} );
 
 		$tableHaji = $('#table-haji').DataTable({ 
 			"lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
@@ -236,200 +354,224 @@
 
 			},
 			"columns": [
-			{"data": "haji_id"},
-			{"data": "haji_nomor_paspor"},
-			{"data": "haji_tahun"},
-			{"data": "haji_nama"},
-			{"data": "haji_usia"},
-			{"data": "haji_jk"},
-			{"data": "haji_status_jemaah"},
-			{"data": "haji_regu_id"},
-			{"data": "haji_rombongan_id"},
-			{"data": "haji_kloter_id"},
-			{"data": "kota_nama"},
-			{"data": "provinsi_nama"},
-			{"data": "action"},
+			{"data": "haji_id", "name": "haji_id",},
+			{"data": "haji_nomor_porsi", "name": "haji_nomor_porsi"},
+			{"data": "haji_tahun", "name": "haji_tahun"},
+			{"data": "haji_nama", "name": "haji_nama"},
+			{"data": "haji_usia", "name": "haji_usia"},
+			{"data": "haji_jk", "name": "haji_jk"},
+			{"data": "haji_status_jemaah","name":"haji_status_jemaah"},
+			{"data": "haji_regu_id","name": "haji_regu_id"},
+			{"data": "haji_rombongan_id", "name": "haji_rombongan_id"},
+			{"data": "haji_kloter_id", "name": "haji_kloter_id"},
+			{"data": "kota_nama", "name":"kota_id"},
+			{"data": "provinsi_nama", "name": "provinsi_id"},
+			{"data": "action", "searchable": false},
 			],
 			'columnDefs': [
-			
+
 			{
 				"targets": -1,
 				"className": "action-no-wrap",
 			},
 
 			],
-			
+
 
 
 		});
 
+		$tableHaji.columns().every( function () {
+			var that = this;
+			$( 'input', this.footer() ).on( 'keyup change clear', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			} );
+
+			$( 'select', this.footer() ).on( 'change', function () {
+				if ( that.search() !== this.value ) {
+					that
+					.search( this.value )
+					.draw();
+				}
+			} );
+
+			
+		} );
+
+
+
+
+
 		new $.fn.dataTable.FixedColumns( $tableHaji , {
-            leftColumns: 2, //specifies how many left columns should be fixed.
             rightColumns: 1 //specifies how many left columns should be fixed.
         });
 
 
 
-		$btnTambah.click(function() {
-			clearData();
-			clearError();
-			$("#modal-title-haji").text("Tambah Data Haji");
-			$modalDetail.modal("show");
-		})
+  $btnTambah.click(function() {
+  	clearData();
+  	clearError();
+  	$("#modal-title-haji").text("Tambah Data Haji");
+  	$modalDetail.modal("show");
+  })
 
-		$btnSubmit.click(function(e) {
-			$(this).attr('disabled', true);
-			formData = {
-				nama: $nama.val(),
-				paspor: $paspor.val(),
-				tahun: $tahun.val(),
-				usia: $usia.val(),
-				jk: $jk.val(),
-				status: $status.val(),
-				regu: $regu.val(),
-				rombongan: $rombongan.val(),
-				kloter: $kloter.val(),
-				kota: $kota.val(),
-				id: $id.val(),
+  $btnSubmit.click(function(e) {
+  	$(this).attr('disabled', true);
+  	formData = {
+  		nama: $nama.val(),
+  		paspor: $paspor.val(),
+  		tahun: $tahun.val(),
+  		usia: $usia.val(),
+  		jk: $jk.val(),
+  		status: $status.val(),
+  		regu: $regu.val(),
+  		rombongan: $rombongan.val(),
+  		kloter: $kloter.val(),
+  		kota: $kota.val(),
+  		id: $id.val(),
+  	};
+  	data = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])).join('&')
+  	var url = "";
+  	if (formData.id) {
+  		url = '{{ base_url('data-haji/update') }}';
+  	} else {
+  		url = '{{ base_url('data-haji/store') }}'
+  	}
+  	axios.post(url, data)
+  	.then(res => {
+  		data = res.data;
+  		clearError();
+  		console.log(data);
+  		if (data.success == 0) {
+  			$.each(data.messages, function(key, value) {
+
+  				$('#'+key).addClass('is-invalid');
+  				$('#'+key).parent('.form-group').find('.error').html(value);
+  			});
+  			$btnSubmit.attr('disabled', false);
+
+  		} else if (data.success == 1){
+  			toggleModal($modalDetail, false).done(function() {
+  				$tableHaji.ajax.reload();
+  				$btnSubmit.attr('disabled', false);
+  			});
+
+
+
+  		}
+
+
+
+  	})
+  	.catch(err => {
+  		$(this).attr('disabled', false);
+
+  	});
+  });
+
+});
+
+
+function showModal(id,opsi) {
+	if (opsi == 1) {
+		showEdit(id);
+	} else if(opsi == 2) {
+		showDelete(id);
+	}
+}
+
+function showEdit(id) {
+	let formData = {
+		id: id,
+	};
+	clearError();
+	clearData();
+	data = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])).join('&')
+	axios.post("{{ base_url("data-haji/getDataHaji") }}", data)
+	.then((res) => {
+
+		data = res.data;
+
+		$nama.val(data.haji_nama);
+		$paspor.val(data.haji_nomor_porsi);
+		$tahun.val(data.haji_tahun);
+		$usia.val(data.haji_usia);
+		$jk.val(data.haji_jk);
+		$status.val(data.haji_status_jemaah);
+		$regu.val(data.haji_regu_id);
+		$rombongan.val(data.haji_rombongan_id);
+		$kloter.val(data.haji_kloter_id);
+		$kota.val(data.haji_kota_id);
+
+		$id.val(data.haji_id);
+		$("#modal-title-haji").text("Ubah Data Haji");
+
+		$modalDetail.modal("show");
+	})
+}
+
+function showDelete(id) {
+	Swal.fire({
+		title: 'Delete Data',
+		text: "Yakin akan menghapus data ini ?",
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Ya, Hapus!'
+	}).then((result) => {
+		if (result.value) {
+			let formData = {
+				id: id,
 			};
 			data = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])).join('&')
-			var url = "";
-			if (formData.id) {
-				url = '{{ base_url('data-haji/update') }}';
-			} else {
-				url = '{{ base_url('data-haji/store') }}'
-			}
-			axios.post(url, data)
-			.then(res => {
-				data = res.data;
-				clearError();
-				console.log(data);
-				if (data.success == 0) {
-					$.each(data.messages, function(key, value) {
+			axios.post("{{ base_url("data-haji/delete") }}", data)
+			.then((res) => {
+				Swal.fire({
+					title: 'Deleted!',
+					text: 'Your file has been deleted.',
+					icon: 'success',
+					timer: 500,
+					showConfirmButton: false,
 
-						$('#'+key).addClass('is-invalid');
-						$('#'+key).parent('.form-group').find('.error').html(value);
-					});
-					$btnSubmit.attr('disabled', false);
-
-				} else if (data.success == 1){
-					toggleModal($modalDetail, false).done(function() {
-						$tableHaji.ajax.reload();
-						$btnSubmit.attr('disabled', false);
-					});
-
-					
-
-				}
-
-
-
-			})
-			.catch(err => {
-				$(this).attr('disabled', false);
-
+				})
+				.then(() => {
+					$tableHaji.ajax.reload();
+				})
 			});
-		});
-
-	});
 
 
-	function showModal(id,opsi) {
-		if (opsi == 1) {
-			showEdit(id);
-		} else if(opsi == 2) {
-			showDelete(id);
 		}
-	}
-
-	function showEdit(id) {
-		let formData = {
-			id: id,
-		};
-		clearError();
-		clearData();
-		data = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])).join('&')
-		axios.post("{{ base_url("data-haji/getDataHaji") }}", data)
-		.then((res) => {
-
-			data = res.data;
-			
-			$nama.val(data.haji_nama);
-			$paspor.val(data.haji_nomor_paspor);
-			$tahun.val(data.haji_tahun);
-			$usia.val(data.haji_usia);
-			$jk.val(data.haji_jk);
-			$status.val(data.haji_status_jemaah);
-			$regu.val(data.haji_regu_id);
-			$rombongan.val(data.haji_rombongan_id);
-			$kloter.val(data.haji_kloter_id);
-			$kota.val(data.haji_kota_id);
-
-			$id.val(data.haji_id);
-			$("#modal-title-haji").text("Ubah Data Haji");
-
-			$modalDetail.modal("show");
-		})
-	}
-
-	function showDelete(id) {
-		Swal.fire({
-			title: 'Delete Data',
-			text: "Yakin akan menghapus data ini ?",
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Ya, Hapus!'
-		}).then((result) => {
-			if (result.value) {
-				let formData = {
-					id: id,
-				};
-				data = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])).join('&')
-				axios.post("{{ base_url("data-haji/delete") }}", data)
-				.then((res) => {
-					Swal.fire({
-						title: 'Deleted!',
-						text: 'Your file has been deleted.',
-						icon: 'success',
-						timer: 500,
-						showConfirmButton: false,
-
-					})
-					.then(() => {
-						$tableHaji.ajax.reload();
-					})
-				});
-
-
-			}
-		});
-	}
+	});
+}
 
 
 
 
-	function clearData() {
-		$id.val("");
+function clearData() {
+	$id.val("");
 
-		$nama.val("");
-		$paspor.val("");
-		$tahun.val("");
-		$usia.val("");
-		$jk.prop("selectedIndex",0);
-		$status.prop("selectedIndex",0);
-		$regu.prop("selectedIndex",0);
-		$rombongan.prop("selectedIndex",0);
-		$kloter.prop("selectedIndex",0);
-		$kota.prop("selectedIndex",0);
-		$id.val("");
+	$nama.val("");
+	$paspor.val("");
+	$tahun.val("");
+	$usia.val("");
+	$jk.prop("selectedIndex",0);
+	$status.prop("selectedIndex",0);
+	$regu.prop("selectedIndex",0);
+	$rombongan.prop("selectedIndex",0);
+	$kloter.prop("selectedIndex",0);
+	$kota.prop("selectedIndex",0);
+	$id.val("");
 
-	}
-	function clearError() {
-		$(".error").html("");
-		$(".is-invalid").removeClass('is-invalid');
-	}
+}
+function clearError() {
+	$(".error").html("");
+	$(".is-invalid").removeClass('is-invalid');
+}
 
 </script>
 @endsection
