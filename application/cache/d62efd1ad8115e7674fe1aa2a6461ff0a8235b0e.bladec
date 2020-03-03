@@ -196,13 +196,19 @@
  </div>
  </div>
  <div class="col-md-4">
+
+ 
+
+
  <div class="card">
  <div class="card-header">
  <h4>Hirarki Data</h4>
  </div>
  <div class="card-body">
+
  <div id="example1" class="list-group col">
- <div class="list-group-item urutan" data-value="0"><i class="ion-arrow-move"></i> Data Kota</div>
+ <div class="list-group-item urutan" data-value="0">
+ <i class="ion-arrow-move"></i> Data Kota</div>
  <div class="list-group-item urutan" data-value="1"><i class="ion-arrow-move"></i> Data Kloter</div>
  <div class="list-group-item urutan" data-value="2"><i class="ion-arrow-move"></i> Data Rombongan</div>
  <div class="list-group-item urutan" data-value="3"><i class="ion-arrow-move"></i> Data Regu</div>
@@ -215,7 +221,7 @@
  </div>
  </div>
  </div>
- 
+
  <div class="col-12">
  <div id="accordion-treemap">
  <div class="accordion">
@@ -295,10 +301,10 @@
  </div>
  </div>
 
-	</section>
+ </section>
 
-	<!-- Modal -->
-	<div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+ <!-- Modal -->
+ <div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
  <div class="modal-dialog  modal-lg" role="document">
  <div class="modal-content">
  <div class="modal-header">
@@ -315,31 +321,31 @@
  <div class="modal-footer"></div>
  </div>
  </div>
-	</div>
+ </div>
 
-	<?php $this->stopSection(); ?>
-	<?php $this->startSection('js-export'); ?>
-	<script src="<?php echo static::e(base_url("assets/modules/datatables/datatables.min.js")); ?>"></script>
+ <?php $this->stopSection(); ?>
+ <?php $this->startSection('js-export'); ?>
+ <script src="<?php echo static::e(base_url("assets/modules/datatables/datatables.min.js")); ?>"></script>
 
-	<script src="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js")); ?>"></script>
 
-	<script src="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/js/dataTables.fixedColumns.min.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/js/dataTables.fixedColumns.min.js")); ?>"></script>
 
-	<script src="<?php echo static::e(base_url("assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/datatables/Select-1.2.4/js/dataTables.select.min.js")); ?>"></script>
 
-	<script src="<?php echo static::e(base_url("assets/modules/highcharts/highcharts.js")); ?>"></script>
-	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/data.js")); ?>"></script>
-	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/heatmap.js")); ?>"></script>
-	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/treemap.js")); ?>"></script>
-	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/offline-exporting.js")); ?>"></script>
-	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/accessibility.js")); ?>"></script>
-	<script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/boost.js")); ?>"></script>
-	<script src="<?php echo static::e(base_url("assets/modules/select2/dist/js/select2.full.min.js")); ?>"></script>
-	<script src="<?php echo static::e(base_url("assets/sortablejs-1.10.2/package/Sortable.min.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/highcharts/highcharts.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/data.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/heatmap.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/treemap.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/offline-exporting.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/accessibility.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/highcharts/modules/boost.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/modules/select2/dist/js/select2.full.min.js")); ?>"></script>
+ <script src="<?php echo static::e(base_url("assets/sortablejs-1.10.2/package/Sortable.min.js")); ?>"></script>
 
-	<?php $this->stopSection(); ?>
-	<?php $this->startSection('js-inline'); ?>
-	<script>
+ <?php $this->stopSection(); ?>
+ <?php $this->startSection('js-inline'); ?>
+ <script>
 
  var example1 = null;
 
@@ -356,7 +362,8 @@
  var $status = null;
  var $urutan = [];
  let $tableHaji = null;
-
+ let sortable = null;
+ let isRequesting = false;
  $(function() {
  $tahun = $("select[name=tahun]");
  $usia = $("select[name=usia]");
@@ -366,27 +373,27 @@
  $status = $("select[name=status]");
  $(example1).find('.urutan').each(function(i,e) {$urutan.push($(e).attr('data-value'))});
 
- $tableHaji = $('#table-haji').DataTable({ 
- "lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
- "bAutoWidth": false ,
- scrollX:        true,
- scrollCollapse: true,
- "order": [], 
- "columns": [
- { "data": "haji_nomor_porsi" },
- { "data": "haji_tahun" },
- { "data": "haji_nama" },
- { "data": "haji_usia" },
- { "data": "jenis_kelamin" },
- { "data": "status_jemaah" },
- { "data": "haji_regu_id" },
- { "data": "haji_rombongan_id" },
- { "data": "haji_kloter_id" },
- { "data": "nama_kota" },
- { "data": "nama_provinsi" },
- ],
+ // $tableHaji = $('#table-haji').DataTable({ 
+ // 	"lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+ // 	"bAutoWidth": false ,
+ // 	scrollX:        true,
+ // 	scrollCollapse: true,
+ // 	"order": [], 
+ // 	"columns": [
+ // 	{ "data": "haji_nomor_porsi" },
+ // 	{ "data": "haji_tahun" },
+ // 	{ "data": "haji_nama" },
+ // 	{ "data": "haji_usia" },
+ // 	{ "data": "jenis_kelamin" },
+ // 	{ "data": "status_jemaah" },
+ // 	{ "data": "haji_regu_id" },
+ // 	{ "data": "haji_rombongan_id" },
+ // 	{ "data": "haji_kloter_id" },
+ // 	{ "data": "kota_nama" },
+ // 	{ "data": "provinsi_nama" },
+ // 	],
 
- });
+ // });
 
  generateHighTreemap()
  .then(resp => {
@@ -397,9 +404,9 @@
  isitable = r.table;
  points = r.data;
 
- $tableHaji.clear();
- $tableHaji.rows.add(isitable);
- $tableHaji.draw();
+ // $tableHaji.clear();
+ // $tableHaji.rows.add(isitable);
+ // $tableHaji.draw();
 
  dataSet = points.filter(function($el) {
  return $el.parentt == "";
@@ -407,7 +414,8 @@
 
  insHighchart.setTitle({text:'Data Jemaah Haji'});
  insHighchart.setSubtitle({text:r.subtitle});
- insHighchart.series[0].setData(dataSet);
+ insHighchart.series[0].setData(dataSet, true);
+ 
  insHighchart.hideLoading();
 
  });
@@ -416,7 +424,7 @@
 
  example1 = document.getElementById('example1');
 
- new Sortable(example1, {
+ sortable = new Sortable(example1, {
  animation: 150,
  ghostClass: 'blue-background-class',
 
@@ -482,8 +490,8 @@
  var top =  $top.val();
  var status =  $status.val();
  var kota =  $kota.val();
- var urutan =  $urutan;
 
+ var urutan =  checkSequential($urutan);
 
  post = {
  tahun,
@@ -502,14 +510,14 @@
  {
  points = r.data;
  isitable = r.table;
- $tableHaji.clear();
- $tableHaji.rows.add(isitable);
- $tableHaji.draw();
+ // $tableHaji.clear();
+ // $tableHaji.rows.add(isitable);
+ // $tableHaji.draw();
  dataSet = points.filter(function($el) {
  return $el.parentt == "";
  });
  insHighchart.setSubtitle({text:r.subtitle});
- insHighchart.series[0].setData(dataSet);
+ insHighchart.series[0].update({data:dataSet});
  insHighchart.hideLoading();
 
  }
@@ -613,9 +621,9 @@
  borderColor: '#AAA',
  formatter: function () {
  if (this.point.status == 4) {
- return "Click For Detail";
+ return this.point.description2;
  } else
- return this.point.description+' ';
+ return this.point.description;
 
  }
  },
@@ -634,13 +642,40 @@
 
 
  async function fetchData(values) {
+
+ if (isRequesting == false) {
+ sortable.option('sort', false);
+ $('select').each(function(index, el) {
+ $(this).attr('disabled', true);
+
+ });
+ isRequesting = true;
+ } 
+
  var url = "<?php echo static::e(base_url('treemap/map?')); ?>"+values;
  const response = await fetch(url, {
  method: 'GET',
  });
+
+ isRequesting = false;
+ sortable.option('sort', true);
+ $('select').each(function(index, el) {
+ $(this).attr('disabled', false);
+
+ });
+
  return await response.json();
  }
 
-	</script>
-	<?php $this->stopSection(); ?>
+
+ function checkSequential(arr) {
+ seq =  arr.every((num, i) => i === arr.length - 1 || num < arr[i + 1]);
+ if (seq) {
+ return "sama";
+ } else {
+ return arr;
+ }
+ }
+ </script>
+ <?php $this->stopSection(); ?>
 <?php if (@$_shouldextend[1]) { echo $this->runChild('layouts.layout', ['bodyClass' => 'sidebar-mini']); } ?>

@@ -45,7 +45,7 @@
 									<th>Regu</th>
 									<th>Rombongan</th>
 									<th>Kloter</th>
-									<th>Kota</th>
+									<th>Kota/Kabupaten</th>
 									<th>Provinsi</th>
 									<th>Action</th>
 								</tr>
@@ -66,7 +66,7 @@
 									<th>Regu</th>
 									<th>Rombongan</th>
 									<th>Kloter</th>
-									<th>Kota</th>
+									<th>Kota/Kabupaten</th>
 									<th>Provinsi</th>
 									<th></th>
 								</tr>
@@ -175,7 +175,7 @@
 
 								</div>
 								<div class="form-group">
-									<label for="message-text" class="col-form-label">Kota:</label>
+									<label for="message-text" class="col-form-label">Kota/Kabupaten:</label>
 									<select  id="kota" class="form-control">
 										@foreach ($data['kota'] as $kota)
 										<option value="{{ $kota->kota_id }}">{{ $kota->kota_nama }}</option>

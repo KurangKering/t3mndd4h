@@ -16,7 +16,8 @@
 		"illuminate/view": "^5.8",
 		"illuminate/filesystem": "^5.8",
 		"illuminate/events": "^5.8",
-		"illuminate/database": "^5.8"
+		"illuminate/database": "^5.8",
+		"mistic100/randomcolor": "^1.0"
 	},
 	"autoload": {
 		"classmap": [

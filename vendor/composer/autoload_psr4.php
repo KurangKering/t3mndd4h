@@ -30,5 +30,6 @@ return array(
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Common/Inflector'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
+    'Colors\\' => array($vendorDir . '/mistic100/randomcolor/src'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
 );

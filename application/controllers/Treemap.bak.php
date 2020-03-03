@@ -1,79 +1,99 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class TestTestTreemap extends CI_Controller
+class Treemap extends CI_Controller
 {
 
+	static public $TUA = 2;
+	static public $MUDA = 1;
 	public function index()
 	{
-		$d = $this->M_Haji->select('haji_tahun')->groupBy('haji_tahun')->get();
+		$d = $this->M_Haji->pluck('haji_tahun')->unique();
+		if (!$d->contains(date('Y'))) {
+			$d->push((int) date('Y'));
+		}
+		$kota = $this->M_Kota->get();
 		$data['tahun'] = $d;
 
-		return view('testtesttreemap.index', compact('data'));
+		$data['kota'] = $kota;
+
+		return view('treemap.index', compact('data'));
 	}
 
 	public function map()
 	{
-		$this->benchmark->mark('doggy');
 
 		$tahun  = $this->input->get('tahun') ?? date('Y');
 		$jk     = $this->input->get('jk');
 		$usia   = $this->input->get('usia');
+		$kota   = $this->input->get('kota');
 		$status = $this->input->get('status');
 		$top    = $this->input->get('top');
+		$urutan    = $this->input->get('urutan');
 
 
+		$conditions = array(
+			'haji_jk' => $jk,
+			'haji_status_jemaah' => $status,
+			'haji_tahun' => $tahun,
+			'haji_kota_id' => $kota,
+		);
+		$conditionUsia = null;
 
-
-		$qDataHaji = $this->M_Haji;
+		switch ($usia) {
+			case '1':
+			$conditionUsia = "haji_usia >= 18 AND haji_usia <= 64";
+			break;
+			case '2':
+			$conditionUsia = "haji_usia > 64";
+			break;
+			default:
+			break;
+		}
 		
-		$isCondition = $jk || $status || $top || $usia || $tahun;
-		$conditions  = array();
-		if ($isCondition) {
-			$conditions["haji_jk"] = $jk;
-			$conditions["haji_status_jemaah"] = $status;
-			$conditions["haji_tahun"] = $tahun;
+		$conditions = array_filter($conditions);
+		$daerahTerbanyak = array();
 
-
-			$conditions = array_filter($conditions);
-			if ($top) {
-				$idTop = $this->M_Haji->select('haji_kota_id')->from('haji')->where($conditions);
-				if ($usia == "2") {
-					$idTop = $idTop->whereBetween('haji_usia', ["18", "64"]);
-				} else if ($usia == "3") {
-					$idTop = $idTop->where('haji_usia', '>=', '65');
-
-				}
-
-				$idTop = $idTop->groupBy('haji_kota_id')
-				->orderByRaw('COUNT(*) desc')
-				->limit($top);
-				$idTop     = $idTop->pluck('haji_kota_id');
-				$qDataHaji = $qDataHaji->whereIn('haji_kota_id', $idTop);
-			}
-
-			if ($usia == "1") {
-				$qDataHaji = $qDataHaji->whereBetween('haji_usia', ["18", "64"]);
-			} else if ($usia == "2") {
-				$qDataHaji =  $qDataHaji->where('haji_usia', '>=', '65');
-
-			}
-			$qDataHaji = $qDataHaji->where($conditions)
-			->with('dataKota');
+		if ($top) {
+			$daerahTerbanyak = $this->M_Haji->select('haji_kota_id')
+			->from('haji')
+			->where($conditions);
+			if ($usia) {
+				$daerahTerbanyak = $daerahTerbanyak->whereRaw($conditionUsia);
+			} 
+			$daerahTerbanyak = $daerahTerbanyak->groupBy('haji_kota_id')
+			->orderByRaw('COUNT(*) desc')
+			->limit($top);
+			$daerahTerbanyak     = $daerahTerbanyak->pluck('haji_kota_id');
 		}
-		$dataHaji = $qDataHaji->get();
-		if ($isCondition) {
-			$dKota      = $dataHaji->pluck('dataKota')->flatten()->unique();
-			$dKloter    = $dataHaji->pluck('haji_kloter_id')->flatten()->unique();
-			$dRombongan = $dataHaji->pluck('haji_rombongan_id')->flatten()->unique();
-			$dRegu      = $dataHaji->pluck('haji_regu_id')->flatten()->unique();
-		} else {
 
-			$dKota      = $this->M_Kota->get();
-			$dKloter    = array_keys(hKloter());
-			$dRombongan = array_keys(hRombongan());
-			$dRegu      = array_keys(hRegu());
+
+		$qDataHaji = $this->M_Haji->where($conditions);
+		if (count($daerahTerbanyak) > 0 ) {
+			$qDataHaji = $qDataHaji->whereIn('haji_kota_id', $daerahTerbanyak);
 		}
+		if ($conditionUsia) {
+			$qDataHaji = $qDataHaji->whereRaw($conditionUsia);
+		} 
+
+		$dataHaji = $qDataHaji->with('dataKota')->get();
+
+		
+
+		if ($dataHaji->count() <= 0 ) {
+			$json = array('data' => [], 'subitle' => "", 'table' => []);
+			$this->output
+			->set_content_type('application/json', 'utf-8')
+			->set_output(json_encode($json, JSON_PRETTY_PRINT))
+			->_display();
+			exit;
+		}
+
+		$dKota      = $dataHaji->pluck('dataKota')->flatten()->unique();
+		$dKloter    = $dataHaji->pluck('haji_kloter_id')->flatten()->unique();
+		$dRombongan = $dataHaji->pluck('haji_rombongan_id')->flatten()->unique();
+		$dRegu      = $dataHaji->pluck('haji_regu_id')->flatten()->unique();
+
 		$hKloter    = hKloter();
 		$hRombongan = hRombongan();
 		$hRegu      = hRegu();
@@ -102,17 +122,17 @@ class TestTestTreemap extends CI_Controller
 			$rawTableKota = $this->genRow($isiTableKota);
 			$idKota = md5($vko->kota_nama);
 			
-			$container[] = array(
-				'id' => $idKota,
+			$tmpKota = array(
+				'id' => md5("kota {$vko->kota_id}"),
 				'name' => $vko->kota_nama,
 				'value' => $cJumlahIsiKloter,
-				'parentt' => "",
 				'description' => $rawTableKota,
 				'status' => 1,
 				'values' => $cJumlahJemaahKota,
 
 			);
-			
+
+
 			foreach ($dKloter as $vklo) {
 
 				$qJumlahJemaahKloter = $qJumlahJemaahKota->where('haji_kloter_id', $vklo);
@@ -134,11 +154,10 @@ class TestTestTreemap extends CI_Controller
 
 
 
-				$container[] = array(
-					'id' => $idKloter,
+				$tmpKloter = array(
+					'id' => md5("kloter {$vklo}"),
 					'name' => $hKloter[$vklo],
 					'value' => $cJumlahIsiRombongan,
-					'parentt' => $idKota,
 					'description' => $rawTableKloter,
 					'status' => 2,
 					'values' => $cJumlahJemaahKloter,
@@ -169,11 +188,10 @@ class TestTestTreemap extends CI_Controller
 
 
 
-					$container[] = array(
-						'id' => $idRombongan,
+					$tmpRombongan = array(
+						'id' => md5("rombongan {$vro}"),
 						'name' => $hRombongan[$vro],
 						'value' => $cJumlahIsiRegu,
-						'parentt' => $idKloter,
 						'description' => $rawTableRombongan,
 						'status' => 3,
 						'values' => $cJumlahJemaahRombongan,
@@ -229,27 +247,74 @@ class TestTestTreemap extends CI_Controller
 						$rawTablePeserta .=  "<hr>";
 						$rawTablePeserta .=  $this->genRowTopHeader($kerangkaTablePeserta);
 						$rawTablePeserta .= "<br>";
-						$container[] = array(
-							'id' => $idRegu,
+						$tmpRegu = array(
+							'id' => md5("regu {$vre}"),
 							'name' => $hRegu[$vre],
 							'value' => $cJumlahJemaahRegu,
-							'parentt' => $idRombongan,
+							'description2' => $rawTableRegu,
 							'description' => $rawTablePeserta,
-							'status' => 5,
+							'status' => 4,
 							'values' => $cJumlahJemaahRegu,
 
 						);
+
+						$tmpp = array(
+							$tmpKota,
+							$tmpKloter,
+							$tmpRombongan,
+							$tmpRegu,
+						);
+						if ($urutan) {
+							$hasilUrut = explode(',', $urutan);
+							if ($hasilUrut == ['0','1','2','3']) {
+								$tmp = $tmpp;
+							} else {
+								$tmp = array();
+								for ($i=0; $i < count($tmpp); $i++) { 
+									$tmp[$i] = $tmpp[$hasilUrut[$i]]; 
+									$tmp[$i]['status'] = $i + 1;
+									$tmp[$i]['description'] = "";
+								}
+							}
+							
+						} else {
+							$tmp = $tmpp;
+						}
+
+
+
+
+						$tmp[0]['id'] = $tmp[0]['id'];
+						$tmp[1]['id'] = $tmp[0]['id'] . $tmp[1]['id'];
+						$tmp[2]['id'] = $tmp[1]['id'] . $tmp[2]['id'];
+						$tmp[3]['id'] = $tmp[2]['id'] . $tmp[3]['id'];
+
+						$tmp[3]['description'] = $rawTablePeserta;
+						$tmp[3]['parentt'] = $tmp[2]['id'];
+						$tmp[2]['parentt'] = $tmp[1]['id'];
+						$tmp[1]['parentt'] = $tmp[0]['id'];
+						$tmp[0]['parentt'] = "";
+
+
+
+						for ($i=0; $i < count($tmp); $i++) { 
+							if (!in_array($tmp[$i]['id'], array_column($container,'id'))) {
+								array_push($container, $tmp[$i]);
+							}
+						}
+
 
 					}
 				}
 			}
 			$indexKota++;
 		}
+
 		
 		$cKotaIndex=  array_keys(array_column($container, 'status'), 1);
 		$cKloterIndex=  array_keys(array_column($container, 'status'), 2);
 		$cRombonganIndex=  array_keys(array_column($container, 'status'), 3);
-		$cReguIndex=  array_keys(array_column($container, 'status'), 5);
+		$cReguIndex=  array_keys(array_column($container, 'status'), 4);
 
 		$maxVKota = 0;
 		foreach ($cKotaIndex as $key => $value) {
@@ -305,11 +370,51 @@ class TestTestTreemap extends CI_Controller
 			$color = $this->pickHex($weight);
 			$container[$value]['color'] = $color;
 		}
+		$subtitle = array();
+		if (count($container) > 0 ) {
+			if ($tahun) {
+				$subtitle[] = "Tahun {$tahun}";
+			}
+			if ($usia == self::$MUDA) {
+				$subtitle[] = "Usia Diatas 18 Tahun";
+			} else if($usia == self::$TUA) {
+				$subtitle[] = "Usia Diatas 64 Tahun";
+			}
+			if ($jk) {
+				$subtitle[] = "Jenis Kelamin ". hJK($jk);
+			} 
+			if ($status) {
+				$subtitle[] = "Status Jemaah ". hStatusJemaah($status);
+			}
+			if ($top) {
+				$subtitle[] = "{$top} Besar";
+			}
+			if ($kota) {
+				$subtitle[] = "Kota {$this->M_Kota->find($kota)->kota_nama}";
+			}
+		}
 
-
+		$dataTable = $dataHaji->map->only(['haji_nomor_porsi',
+			'haji_tahun',
+			'haji_nama',
+			'haji_usia',
+			'jenis_kelamin',
+			'status_jemaah',
+			'haji_regu_id',
+			'haji_rombongan_id',
+			'haji_kloter_id',
+			'nama_kota',
+			'nama_provinsi']);
+		$json = array(
+			'table' => $dataTable,
+			'data' => $container,
+			'subtitle' => implode(', ', $subtitle),
+		);
+		$json = gzencode(json_encode($json));
 		$this->output
+		->set_header('Content-Encoding: gzip')
 		->set_content_type('application/json', 'utf-8')
-		->set_output(json_encode($container, JSON_PRETTY_PRINT))
+		->set_output($json)
 		->_display();
 		exit;
 

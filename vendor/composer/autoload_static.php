@@ -61,6 +61,7 @@ class ComposerStaticInitace80532453ce7ecd55253886820a2c9
         ),
         'C' => 
         array (
+            'Colors\\' => 7,
             'Carbon\\' => 7,
         ),
     );
@@ -164,6 +165,10 @@ class ComposerStaticInitace80532453ce7ecd55253886820a2c9
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'Colors\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mistic100/randomcolor/src',
+        ),
         'Carbon\\' => 
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
@@ -181,6 +186,7 @@ class ComposerStaticInitace80532453ce7ecd55253886820a2c9
     );
 
     public static $classMap = array (
+        'ClassName' => __DIR__ . '/../..' . '/application/libraries/LibTree.php',
         'Datatables' => __DIR__ . '/../..' . '/application/libraries/Datatables.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',

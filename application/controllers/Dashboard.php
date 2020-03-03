@@ -5,6 +5,7 @@ class Dashboard extends CI_Controller {
 
 	public function index()
 	{
+		
 		view('dashboard');
 	}
 
