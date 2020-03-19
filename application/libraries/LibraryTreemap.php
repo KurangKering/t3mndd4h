@@ -157,7 +157,7 @@ class LibraryTreemap
             $array_kota = array(
                 'id'          => md5("kota {$vko->kota_id}"),
                 'name'        => $vko->kota_nama,
-                'value'       => $c_ji_kloter,
+                'value'       => $c_jj_kota,
                 'description' => $html_kota,
                 'color'       => $w_kota[$iwkota++],
                 'status'      => 1,
@@ -188,7 +188,7 @@ class LibraryTreemap
                 $array_kloter = array(
                     'id'          => md5("kloter {$vklo->haji_kloter_id}"),
                     'name'        => $h_kloter[$vklo->haji_kloter_id],
-                    'value'       => $c_ji_romb,
+                    'value'       => $c_jj_kloter,
                     'description' => $html_kloter,
                     'color'       => $w_kloter[$iwkloter++],
                     'status'      => 2,
@@ -220,7 +220,7 @@ class LibraryTreemap
                     $array_romb = array(
                         'id'          => md5("rombongan {$vro->haji_rombongan_id}"),
                         'name'        => $h_romb[$vro->haji_rombongan_id],
-                        'value'       => $c_ji_regu,
+                        'value'       => $c_jj_romb,
                         'description' => $html_romb,
                         'color'       => $w_romb[$iwromb++],
                         'status'      => 3,

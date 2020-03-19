@@ -258,7 +258,7 @@
 
  </div>
 
- <div class="col-12">
+ <?php /* <div class="col-12">
  <div id="accordion-table">
  <div class="accordion">
  <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-2" aria-expanded="true">
@@ -298,7 +298,7 @@
  </div>
 
 
- </div>
+ </div> */ ?>
  </div>
 
  </section>
@@ -541,6 +541,12 @@
  // textOutline: 0,
 
 
+ },
+ overflow: "none",
+
+ useHTML: true,
+ formatter() {
+ return "<div class=\"text-center\">" + this.point.name + "<br>" + this.point.value+ "</div>";
  }
  },
  hover: {
@@ -609,6 +615,8 @@
  }
  },
  tooltip: {
+ outside: true,
+
  style: {
  fontSize: "16px",
  'z-index': '9999',
