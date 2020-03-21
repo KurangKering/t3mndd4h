@@ -11,6 +11,10 @@ class Auth extends CI_Controller {
 
 	public function login_page()
 	{
+		$auth = $this->session->userdata('auth');
+		if ($auth) {
+			redirect('');
+		}
 		return view('login');
 	}
 

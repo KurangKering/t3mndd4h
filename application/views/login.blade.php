@@ -6,76 +6,108 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
   <title>Login &mdash; Stisla</title>
 
-  <!-- General CSS Files -->
-  <link rel="stylesheet" href="{{ base_url('assets/modules/bootstrap/css/bootstrap.min.css') }}">
-  <link rel="stylesheet" href="{{ base_url('assets/modules/fontawesome/css/all.min.css') }}">
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      background: url({{ base_url('assets/img/398368.jpg') }}) 
+      no-repeat center center fixed;
+      font-family: sans-serif;
+     
 
-  <!-- CSS Libraries -->
-  <link rel="stylesheet" href="{{ base_url('assets/modules/bootstrap-social/bootstrap-social.css') }}">
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
 
-  <!-- Template CSS -->
-  <link rel="stylesheet" href="{{ base_url('assets/css/style.css') }}">
-  <link rel="stylesheet" href="{{ base_url('assets/css/components.css') }}">
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    }
+    .login-box{
+      width: 320px;
+      height: 400px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      top: 50%;
+      left: 50%;
+      position: absolute;
+      transform: translate(-50%,-50%);
+      box-sizing: border-box;
+      padding: 70px 30px;
+    }
+    .avatar{
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      top: -50px;
+      left: calc(50% - 50px);
+    }
+    h1{
+      margin: 0;
+      padding: 0 0 20px;
+      text-align: center;
+      font-size: 22px;
+    }
+    .login-box p{
+      margin: 0;
+      padding: 0;
+      font-weight: bold;
+    }
+    .login-box input{
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .login-box input[type="text"], input[type="password"]
+    {
+      border: none;
+      border-bottom: 1px solid #fff;
+      background: transparent;
+      outline: none;
+      height: 40px;
+      color: #fff;
+      font-size: 16px;
+    }
+    .login-box input[type="submit"]
+    {
+      border: none;
+      outline: none;
+      height: 40px;
+      background: #1c8adb;
+      color: #fff;
+      font-size: 18px;
+      border-radius: 20px;
+    }
+  /*  .login-box input[type="submit"]:hover
+    {
+      cursor: pointer;
+      background: #39dc79;
+      color: #000;
+    }*/
 
-  gtag('config', 'UA-94034622-3');
-</script>
-<!-- /END GA --></head>
+    .login-box a{
+      text-decoration: none;
+      font-size: 14px;
+      color: #fff;
+    }
+    .login-box a:hover
+    {
+      color: #39dc79;
+    }
+
+  </style>
+</head>
 
 <body>
-  <div id="app">
-    <section class="section">
-      <div class="container mt-5">
-        <div class="row">
-          <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
-            <div class="login-brand">
-              {{-- <img src="{{ base_url('assets/img/stisla-fill.svg') }}" alt="logo" width="100" class="shadow-light rounded-circle"> --}}
-            </div>
+  <div class="login-box">
+    <img src="{{ base_url('assets/img/logo.png') }}" class="avatar">
+    <h1>Login Page <br> Sistem Informasi Haji</h1>
+    <form id="form-login">
+      <p>Username</p>
+      <input type="text" required id="username" name="username" placeholder="">
+      <p>Password</p>
+      <input type="password" required id="password" name="password" placeholder="">
+      <input type="submit" name="submit" value="Login">
+    </form>
 
-            <div class="card card-primary">
-              <div class="card-header"><h4>Login</h4></div>
 
-              <div class="card-body">
-                <form id="form-login">
-                  <div class="form-group">
-                    <label for="username">Username</label>
-                    <input required id="username" type="username" class="form-control" name="username" tabindex="1" required autofocus>
-                    
-                  </div>
-
-                  <div class="form-group">
-                    <div class="d-block">
-                    	<label for="password" class="control-label">Password</label>
-                      
-                    </div>
-                    <input required id="password" type="password" class="form-control" name="password" tabindex="2" required>
-                    
-                  </div>
-
-                  
-
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                      Login
-                    </button>
-                  </div>
-                </form>
-                
-                
-
-              </div>
-            </div>
-            
-            <div class="simple-footer">
-              Copyright &copy; Stisla 2018
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 
   <!-- General JS Scripts -->
@@ -88,64 +120,64 @@
   <script src="{{ base_url('assets/sweetalert2.all.min.js') }}"></script>
   <script src="{{ base_url('assets/modules/moment.min.js') }}"></script>
   <script src="{{ base_url('assets/js/stisla.js') }}"></script>
-  
+
   <!-- JS Libraies -->
 
   <!-- Page Specific JS File -->
-  
+
   <!-- Template JS File -->
 
   <script>
     $(function() {
 
-    $btn_login = $("#btn-login");
-    $username = $("#username");
-    $password = $("#password");
+      $btn_login = $("#btn-login");
+      $username = $("#username");
+      $password = $("#password");
 
-    $("#form-login").submit(function(e) {
+      $("#form-login").submit(function(e) {
 
-      e.preventDefault();
+        e.preventDefault();
 
-      $(this).find(':submit').attr('disabled','disabled');
-
-
-      let post_data = {
-        username: $username.val(),
-        password: $password.val(),
-      };
-
-      post_data = Object.keys(post_data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(post_data[key])).join('&')
-
-      axios.post("{{ base_url("auth/login") }}", post_data)
-      .then((res) => {
-      $(this).find(':submit').attr('disabled',false);
+        $(this).find(':submit').attr('disabled','disabled');
 
 
-        response = res.data;
+        let post_data = {
+          username: $username.val(),
+          password: $password.val(),
+        };
 
-        if (response.success == 0) {
-         Swal.fire({
-          title: 'Gagal!',
-          text: response.message,
-          icon: 'error',
-          timer: 1000,
-          showConfirmButton: false,
+        post_data = Object.keys(post_data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(post_data[key])).join('&')
 
-        });
-       } else {
-        window.location.href = "{{ base_url('') }}";
-      }
+        axios.post("{{ base_url("auth/login") }}", post_data)
+        .then((res) => {
+          $(this).find(':submit').attr('disabled',false);
 
-    })
-      .catch(() => {
-      $(this).find(':submit').attr('disabled',false);
 
+          response = res.data;
+
+          if (response.success == 0) {
+           Swal.fire({
+            title: 'Gagal!',
+            text: response.message,
+            icon: 'error',
+            timer: 1000,
+            showConfirmButton: false,
+
+          });
+         } else {
+          window.location.href = "{{ base_url('') }}";
+        }
 
       })
+        .catch(() => {
+          $(this).find(':submit').attr('disabled',false);
 
-    });
-    
-  
+
+        })
+
+      });
+
+
     });
   </script>
 </body>
