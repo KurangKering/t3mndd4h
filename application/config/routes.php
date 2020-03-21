@@ -65,3 +65,9 @@ $route['testtesttreemap/(:any)'] = 'TestTestTreemap/$1';
 
 $route['data-haji'] = 'Haji';
 $route['data-haji/(:any)'] = 'Haji/$1';
+
+$route['data-pengguna'] = 'Pengguna';
+$route['data-pengguna/(:any)'] = 'Pengguna/$1';
+
+$route['login'] = 'Auth/login_page';
+$route['logout'] = 'Auth/logout';

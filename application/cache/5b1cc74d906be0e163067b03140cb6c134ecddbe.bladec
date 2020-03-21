@@ -11,10 +11,23 @@
  <li class="menu-header">Starter</li>
  
  <li><a class="nav-link" href="<?php echo static::e(base_url('dashboard')); ?>"><i class="far fa-square"></i> <span>Dashboard</span></a></li>
- <li><a class="nav-link" href="<?php echo static::e(base_url('data-kota')); ?>"><i class="far fa-square"></i> <span>Data Kota & Provinsi</span></a></li>
- <li><a class="nav-link" href="<?php echo static::e(base_url('data-haji')); ?>"><i class="far fa-square"></i> <span>Data Haji</span></a></li>
- <li><a class="nav-link" href="<?php echo static::e(base_url('treemap')); ?>"><i class="far fa-square"></i> <span>Treemap</span></a></li>
 
+ <?php if($user['role'] == "prov"): ?>
+ <li><a class="nav-link" href="<?php echo static::e(base_url('data-pengguna')); ?>"><i class="far fa-square"></i> <span>Pengguna</span></a></li>
+ <?php endif; ?>
+
+ <?php if($user['role'] == "prov"): ?>
+
+ <li><a class="nav-link" href="<?php echo static::e(base_url('data-kota')); ?>"><i class="far fa-square"></i> <span>Data Kota</span></a></li>
+ <?php endif; ?>
+
+
+ <li><a class="nav-link" href="<?php echo static::e(base_url('data-haji')); ?>"><i class="far fa-square"></i> <span>Data Haji</span></a></li>
+
+ <?php if($user['role'] == "prov"): ?>
+
+ <li><a class="nav-link" href="<?php echo static::e(base_url('treemap')); ?>"><i class="far fa-square"></i> <span>Treemap</span></a></li>
+ <?php endif; ?>
 
  <?php /* <li class="dropdown">
  <a href="<?php echo static::e(base_url('#')); ?>" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Layout</span></a>

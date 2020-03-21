@@ -1,12 +1,24 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Kota extends CI_Controller
+class Kota extends MY_Controller
 {
-
+    public function __construct()
+    {
+        parent::__construct();
+        if ($this->auth['role'] != "prov") {
+            show_404();
+        }
+    }
     public function index()
     {
-        $data['provinsi'] = $this->M_Provinsi->get();
+
+        $data['provinsi'] = $this->M_Provinsi;
+        if ($this->auth['role'] == 'prov') {
+            $data['provinsi'] = $data['provinsi']->where('provinsi_id', $this->auth['role_id']);
+        }
+        $data['provinsi'] = $data['provinsi']->get();
+        $data['auth'] = $this->auth;
         return view('kota.index', compact('data'));
     }
 
@@ -87,16 +99,16 @@ class Kota extends CI_Controller
         $json['messages'] = array();
         if (!$this->form_validation->run()) {
             $json['messages'] = array(
-             'input-kota-provinsi' => form_error('provinsi', '<p class="mt-3 text-danger">', '</p>'),
-             'input-kota' => form_error('kota', '<p class="mt-3 text-danger">', '</p>'),
-         );
+               'input-kota-provinsi' => form_error('provinsi', '<p class="mt-3 text-danger">', '</p>'),
+               'input-kota' => form_error('kota', '<p class="mt-3 text-danger">', '</p>'),
+           );
             $json['messages'] = array_filter($json['messages']);
             $json['success'] = 0;
         } else {
             $postData = array(
-               'kota_provinsi_id' => $post['provinsi'],
-               'kota_nama' => $post['kota'],
-           );
+             'kota_provinsi_id' => $post['provinsi'],
+             'kota_nama' => $post['kota'],
+         );
 
             $insertData = $this->M_Kota->insert($postData);
         }
@@ -109,12 +121,17 @@ class Kota extends CI_Controller
 
     public function jsonDataKota()
     {
+        $auth = $this->auth;
+
         $this->dt->select('
         	k.kota_id,
         	k.kota_nama,
         	p.provinsi_nama
         	');
         $this->dt->from('kota k');
+        if ($auth['role'] == 'prov') {
+            $this->dt->where('k.kota_provinsi_id', $auth['role_id']);
+        }
         $this->dt->join('provinsi p',
             'k.kota_provinsi_id = p.provinsi_id');
         $this->dt->add_column('nomor', '');

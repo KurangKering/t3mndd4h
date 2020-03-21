@@ -9,7 +9,7 @@
 @section('content')
 <section class="section">
 	<div class="section-header">
-		<h1>Data Kota & Provinsi</h1>
+		<h1>Data Kota</h1>
 		<div class="section-header-breadcrumb">
 			<div class="breadcrumb-item active"></div>
 		</div>
@@ -18,7 +18,7 @@
 	<div class="row">
 		
 
-		<div class="col-md-6">
+		<div class="col-md-12">
 			<div class="card">
 				<div class="card-header">
 					<a href="javascript:void(0)" class="btn btn-primary" id="btn-tambah-kota">Tambah Data Kota</a>
@@ -27,23 +27,24 @@
 				
 				<div class="card-body">
 					<table class="table table-hover table-striped" id="table-kota">
-							<thead>                                 
-								<tr>
-									<th class="text-center">
-										ID
-									</th>
-									<th>Nama</th>
-									<th>Provinsi</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
+						<thead>                                 
+							<tr>
+								<th class="text-center">
+									ID
+								</th>
+								<th>Nama</th>
+								<th>Provinsi</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
 
-							</tbody>
-						</table>
-					</div>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
+		@if (1 == 2)
 		<div class="col-md-6">
 			<div class="card">
 				<div class="card-header">
@@ -72,6 +73,7 @@
 				</div>
 			</div>
 		</div>
+		@endif
 
 	</div>
 

@@ -1,8 +1,15 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Treemap extends CI_Controller
+class Treemap extends MY_Controller
 {
+	public function __construct()
+	{
+		parent::__construct();
+		if ($this->auth['role'] != "prov") {
+			show_404();
+		}
+	}
 
 	static public $TUA = 2;
 	static public $MUDA = 1;

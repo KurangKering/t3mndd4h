@@ -1,4 +1,7 @@
-
+@php
+$CI =& get_instance();
+$user = $CI->session->userdata('auth');
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,32 +45,29 @@
 					</ul>
 
 				</form>
-			{{-- 	<ul class="navbar-nav navbar-right">
+				<ul class="navbar-nav navbar-right">
 
 				</li>
 				<li class="dropdown"><a href="{{ base_url('#') }}" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-					<img alt="image" src="{{ base_url('assets/img/avatar/avatar-1.png') }}" class="rounded-circle mr-1">
-					<div class="d-sm-none d-lg-inline-block">Hi, Ujang Maman</div></a>
+					
+					<div class="d-sm-none d-lg-inline-block">Hi, {{ $user['nama'] }}</div></a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<div class="dropdown-title">Logged in 5 min ago</div>
-						<a href="{{ base_url('features-profile.html') }}" class="dropdown-item has-icon">
+						<div class="dropdown-title">{{ "Admin " . $user['tempat'] }}</div>
+
+						<a href="{{ base_url('profile') }}" class="dropdown-item has-icon">
 							<i class="far fa-user"></i> Profile
 						</a>
-						<a href="{{ base_url('features-activities.html') }}" class="dropdown-item has-icon">
-							<i class="fas fa-bolt"></i> Activities
-						</a>
-						<a href="{{ base_url('features-settings.html') }}" class="dropdown-item has-icon">
-							<i class="fas fa-cog"></i> Settings
-						</a>
+						
+						
 						<div class="dropdown-divider"></div>
-						<a href="{{ base_url('#') }}" class="dropdown-item has-icon text-danger">
+						<a href="{{ base_url('logout') }}" class="dropdown-item has-icon text-danger">
 							<i class="fas fa-sign-out-alt"></i> Logout
 						</a>
 					</div>
 				</li>
-			</ul> --}}
+			</ul>
 		</nav>
-		@include('layouts.sidebar')
+		@include('layouts.sidebar', ['user' => $user])
 
 		<!-- Main Content -->
 		<div class="main-content">

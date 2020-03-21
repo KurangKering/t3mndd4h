@@ -56,7 +56,7 @@ if (!function_exists('hJK')) {
 		$daftar =  array(
 			'L' => 'Laki-Laki',
 			'P' => 'Perempuan',
-		
+
 		);
 		if ($status) {
 			return $daftar[$status];
@@ -132,7 +132,7 @@ if (!function_exists('hRombongan')) {
 			'8' => 'Rombongan 8',
 			'9' => 'Rombongan 9',
 			'10' => 'Rombongan 10',
-		
+
 		);
 		if ($data != null) {
 			return $arr[$data];
@@ -156,11 +156,50 @@ if (!function_exists('hKloter')) {
 			'18' => 'Kloter 18',
 			'19' => 'Kloter 19',
 			'20' => 'Kloter 20',
-		
+
 		);
 		if ($data != null) {
 			return $arr[$data];
 		}
 		return $arr;
+	}
+}
+
+
+if (!function_exists('hAkses')) {
+	function hAkses($akses = null) {
+		$CI =& get_instance();
+
+		
+
+		$pecah = explode("_", $akses);
+		$role = isset($pecah[0]) ? $pecah[0] : null ;
+		$id = isset($pecah[1]) ? $pecah[1] : null;
+
+		$hakAkses = null;
+
+		if ($role == 'kota') {
+			$CI->load->model('M_Kota');
+			if (isset($id)) {
+				$kota = $CI->M_Kota->findOrFail($id);
+
+				$hakAkses = "Kota/Kab {$kota->kota_nama}";
+			}
+		} else if ($role == "prov") {
+			$CI->load->model('M_Provinsi');
+			if (isset($id)) {
+				$provinsi = $CI->M_Provinsi->findOrFail($id);
+
+				$hakAkses = "Provinsi {$provinsi->provinsi_nama}";
+			}
+		}
+		return $hakAkses;
+	}
+}
+
+
+if (!function_exists('hRole')) {
+	function hRole($role = null) {
+
 	}
 }

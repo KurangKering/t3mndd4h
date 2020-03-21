@@ -47,7 +47,10 @@
 									<th>Kloter</th>
 									<th>Kota/Kabupaten</th>
 									<th>Provinsi</th>
+
+									@if ($data['auth']['role'] == "kota")
 									<th>Action</th>
+									@endif
 								</tr>
 							</thead>
 							<tbody>
@@ -68,7 +71,9 @@
 									<th>Kloter</th>
 									<th>Kota/Kabupaten</th>
 									<th>Provinsi</th>
+									@if ($data['auth']['role'] == "kota")
 									<th></th>
+									@endif
 								</tr>
 							</tfoot>
 						</table>
@@ -366,7 +371,10 @@
 			{"data": "haji_kloter_id", "name": "haji_kloter_id"},
 			{"data": "kota_nama", "name":"kota_id"},
 			{"data": "provinsi_nama", "name": "provinsi_id"},
+			@if ($data['auth']['role'] == "kota")
+
 			{"data": "action", "searchable": false},
+			@endif
 			],
 			'columnDefs': [
 
@@ -412,68 +420,68 @@
 
 
 
-  $btnTambah.click(function() {
-  	clearData();
-  	clearError();
-  	$("#modal-title-haji").text("Tambah Data Haji");
-  	$modalDetail.modal("show");
-  })
+		$btnTambah.click(function() {
+			clearData();
+			clearError();
+			$("#modal-title-haji").text("Tambah Data Haji");
+			$modalDetail.modal("show");
+		})
 
-  $btnSubmit.click(function(e) {
-  	$(this).attr('disabled', true);
-  	formData = {
-  		nama: $nama.val(),
-  		paspor: $paspor.val(),
-  		tahun: $tahun.val(),
-  		usia: $usia.val(),
-  		jk: $jk.val(),
-  		status: $status.val(),
-  		regu: $regu.val(),
-  		rombongan: $rombongan.val(),
-  		kloter: $kloter.val(),
-  		kota: $kota.val(),
-  		id: $id.val(),
-  	};
-  	data = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])).join('&')
-  	var url = "";
-  	if (formData.id) {
-  		url = '{{ base_url('data-haji/update') }}';
-  	} else {
-  		url = '{{ base_url('data-haji/store') }}'
-  	}
-  	axios.post(url, data)
-  	.then(res => {
-  		data = res.data;
-  		clearError();
-  		console.log(data);
-  		if (data.success == 0) {
-  			$.each(data.messages, function(key, value) {
+		$btnSubmit.click(function(e) {
+			$(this).attr('disabled', true);
+			formData = {
+				nama: $nama.val(),
+				paspor: $paspor.val(),
+				tahun: $tahun.val(),
+				usia: $usia.val(),
+				jk: $jk.val(),
+				status: $status.val(),
+				regu: $regu.val(),
+				rombongan: $rombongan.val(),
+				kloter: $kloter.val(),
+				kota: $kota.val(),
+				id: $id.val(),
+			};
+			data = Object.keys(formData).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(formData[key])).join('&')
+			var url = "";
+			if (formData.id) {
+				url = '{{ base_url('data-haji/update') }}';
+			} else {
+				url = '{{ base_url('data-haji/store') }}'
+			}
+			axios.post(url, data)
+			.then(res => {
+				data = res.data;
+				clearError();
+				console.log(data);
+				if (data.success == 0) {
+					$.each(data.messages, function(key, value) {
 
-  				$('#'+key).addClass('is-invalid');
-  				$('#'+key).parent('.form-group').find('.error').html(value);
-  			});
-  			$btnSubmit.attr('disabled', false);
+						$('#'+key).addClass('is-invalid');
+						$('#'+key).parent('.form-group').find('.error').html(value);
+					});
+					$btnSubmit.attr('disabled', false);
 
-  		} else if (data.success == 1){
-  			toggleModal($modalDetail, false).done(function() {
-  				$tableHaji.ajax.reload();
-  				$btnSubmit.attr('disabled', false);
-  			});
-
-
-
-  		}
+				} else if (data.success == 1){
+					toggleModal($modalDetail, false).done(function() {
+						$tableHaji.ajax.reload();
+						$btnSubmit.attr('disabled', false);
+					});
 
 
 
-  	})
-  	.catch(err => {
-  		$(this).attr('disabled', false);
+				}
 
-  	});
-  });
 
-});
+
+			})
+			.catch(err => {
+				$(this).attr('disabled', false);
+
+			});
+		});
+
+	});
 
 
 function showModal(id,opsi) {

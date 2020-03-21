@@ -139,4 +139,5 @@ $autoload['model'] = array(
 	'M_Provinsi',
 	'M_Regu',
 	'M_Rombongan',
+	'M_Pengguna',
 );

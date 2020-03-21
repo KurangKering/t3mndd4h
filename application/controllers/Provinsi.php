@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Provinsi extends CI_Controller
+class Provinsi extends MY_Controller
 {
 
     // public function index()

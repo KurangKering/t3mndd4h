@@ -1,14 +1,31 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Haji extends CI_Controller
+class Haji extends MY_Controller
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+        
+    }
 
     public function index()
     {
         $haji = $this->M_Haji->get();
-        $kota = $this->M_Kota->orderBy('kota_nama')->get();
-        $provinsi = $this->M_Provinsi->get();
+        $kota = $this->M_Kota->orderBy('kota_nama');
+        $provinsi = $this->M_Provinsi;
+
+        if ($this->auth['role'] == "kota") {
+            $kota = $kota->where('kota_id', $this->auth['role_id'])->get();
+            $provinsi = $provinsi->where('provinsi_id', $kota[0]->kota_provinsi_id);
+        } else if ($this->auth['role'] == "prov"){
+            $kota = $kota->where('kota_provinsi_id', $this->auth['role_id']);
+            $provinsi = $provinsi->where('provinsi_id', $this->auth['role_id']);
+
+        }
+        $provinsi = $provinsi->get();
+
         $filterTahun = json_encode($haji->pluck('haji_tahun')->unique()->flatten());
         $filterJK = json_encode(hJK());
         $filterStatus = json_encode(hStatusJemaah());
@@ -31,6 +48,7 @@ class Haji extends CI_Controller
         $data['filterKloter'] = $filterKloter;
         $data['filterKota'] = $filterKota;
         $data['filterProvinsi'] = $filterProvinsi;
+        $data['auth'] = $this->auth;
         return view('haji.index', compact('data'));
     }
 
@@ -199,6 +217,13 @@ class Haji extends CI_Controller
          ');
         $this->dt->from('haji h');
 
+        if ($this->auth['role'] == "prov") {
+            $this->dt->where('pro.provinsi_id', $this->auth['role_id']);
+        } else if ($this->auth['role'] == "kota") {
+            $this->dt->where('h.haji_kota_id', $this->auth['role_id']);
+
+        }
+
         $this->dt->join('kota ko',
             'h.haji_kota_id = ko.kota_id');
 
@@ -237,12 +262,14 @@ class Haji extends CI_Controller
         }
         $this->dt->edit_column('haji_kloter_id', '$1', "callback_kloter(haji_kloter_id)");
 
-        $this->dt->add_column('action',
-            '<a href="javascript:void(0)" class="btn btn-sm btn-warning" onClick="showModal($1,1)">Ubah</a>
-            <a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="showModal($1,2)">Hapus</a>'
-            , 'haji_id'
-        );
+        if ($this->auth['role'] == "kota") {
 
+            $this->dt->add_column('action',
+                '<a href="javascript:void(0)" class="btn btn-sm btn-warning" onClick="showModal($1,1)">Ubah</a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-danger" onClick="showModal($1,2)">Hapus</a>'
+                , 'haji_id'
+            );
+        }
 
         $mColArray  = $this->input->post('columns');
         // $this->dt->filter('haji_tahun', 2020);
