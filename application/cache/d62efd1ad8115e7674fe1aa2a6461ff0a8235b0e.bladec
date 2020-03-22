@@ -257,6 +257,41 @@
  </div>
 
  </div>
+ <div class="col-12">
+ <div id="accordion-table">
+ <div class="accordion">
+ <div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-2" aria-expanded="true">
+ <h4>Table Rekomendasi Paramedis</h4>
+ </div>
+ <div class="accordion-body collapse show" id="panel-body-2" data-parent="#accordion-table">
+ <div class="card">
+
+ <div class="card-body">
+ <div class="table-responsive">
+ <table class="table table-hover table-striped" id="table-rekomendasi">
+ <thead>                                 
+ <tr>
+
+ <th>Kota</th>
+ <th>Kloter</th>
+ <th>Jumlah Jemaah Tua</th>
+ <th>Jumlah Paramedis</th>
+ <th>Jumlah Kebutuhan</th>
+ </tr>
+ </thead>
+ <tbody>
+
+ </tbody>
+ </table>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+
+ </div>
 
  <?php /* <div class="col-12">
  <div id="accordion-table">
@@ -361,7 +396,7 @@
  var $kota = null;
  var $status = null;
  var $urutan = [];
- let $tableHaji = null;
+ let $tableRekomendasi = null;
  let sortable = null;
  let isRequesting = false;
  $(function() {
@@ -373,27 +408,22 @@
  $status = $("select[name=status]");
  $(example1).find('.urutan').each(function(i,e) {$urutan.push($(e).attr('data-value'))});
 
- // $tableHaji = $('#table-haji').DataTable({ 
- // 	"lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
- // 	"bAutoWidth": false ,
- // 	scrollX:        true,
- // 	scrollCollapse: true,
- // 	"order": [], 
- // 	"columns": [
- // 	{ "data": "haji_nomor_porsi" },
- // 	{ "data": "haji_tahun" },
- // 	{ "data": "haji_nama" },
- // 	{ "data": "haji_usia" },
- // 	{ "data": "jenis_kelamin" },
- // 	{ "data": "status_jemaah" },
- // 	{ "data": "haji_regu_id" },
- // 	{ "data": "haji_rombongan_id" },
- // 	{ "data": "haji_kloter_id" },
- // 	{ "data": "kota_nama" },
- // 	{ "data": "provinsi_nama" },
- // 	],
+ $tableRekomendasi = $('#table-rekomendasi').DataTable({ 
+ "lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+ "bAutoWidth": false ,
+ scrollX:        true,
+ scrollCollapse: true,
+ "order": [], 
+ 
+ "columns": [
+ { "data": "kota_nama" },
+ { "data": "haji_kloter_id" },
+ { "data": "jumlah_tua" },
+ { "data": "jumlah_paramedis" },
+ { "data": "kebutuhan" },
+ ],
 
- // });
+ });
 
  generateHighTreemap()
  .then(resp => {
@@ -401,12 +431,16 @@
  insHighchart.showLoading();
  fetchData("").then(r =>
  {
- isitable = r.table;
+ isitable = r.rekomendasi;
  points = r.data;
 
- // $tableHaji.clear();
- // $tableHaji.rows.add(isitable);
- // $tableHaji.draw();
+ if (isitable) 
+ {
+
+ $tableRekomendasi.clear();
+ $tableRekomendasi.rows.add(isitable);
+ $tableRekomendasi.draw();
+ }
 
  dataSet = points.filter(function($el) {
  return $el.parentt == "";
@@ -509,10 +543,14 @@
  fetchData(post).then(r =>
  {
  points = r.data;
- isitable = r.table;
- // $tableHaji.clear();
- // $tableHaji.rows.add(isitable);
- // $tableHaji.draw();
+ isitable = r.rekomendasi;
+ if (isitable) 
+ {
+
+ $tableRekomendasi.clear();
+ $tableRekomendasi.rows.add(isitable);
+ $tableRekomendasi.draw();
+ }
  dataSet = points.filter(function($el) {
  return $el.parentt == "";
  });

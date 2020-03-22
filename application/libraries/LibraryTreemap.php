@@ -47,7 +47,8 @@ class LibraryTreemap
 
         if ($this->_result_data) {
             $array_data['data']     = array_values($this->_result_data);
-            $array_data['table']    = $this->_datatable;
+            $array_data['rekomendasi']     = ($this->_getRekomendasi());
+            // $array_data['table']    = $this->_datatable;
             $array_data['subtitle'] = $this->makeSubtitle();
         }
 
@@ -394,12 +395,12 @@ class LibraryTreemap
 
         return implode(', ', $subtitle);
 
-      
+
     }
 
-    public function getDataFromDB()
-    {
 
+    private function _queryGetData()
+    {
         $ids_top = null;
         if ($this->_top_data) {
             $ids_top = $this->getIdsTopData($this->_top_data);
@@ -414,7 +415,44 @@ class LibraryTreemap
         $this->_db->from('haji hj');
         $this->_db->join('kota kt', 'hj.haji_kota_id = kt.kota_id');
         $this->_db->join('provinsi pr', 'kt.kota_provinsi_id = pr.provinsi_id');
-        $d_kes = $this->_db->get();
+        $query = $this->_db->get_compiled_select();
+        return $query;
+    }
+
+    private function _getRekomendasi() 
+    {
+        $q_get_data = $this->_queryGetData();
+        $q_rekom = "SELECT 
+        SUM(CASE when haji_usia > 64 then 1 ELSE 0 END) jumlah_tua,
+        SUM(CASE when haji_status_jemaah = 8 then 1 ELSE 0 END) jumlah_paramedis,
+        kota_nama, 
+        haji_kloter_id
+        FROM ({$q_get_data}) rekom       
+        GROUP BY haji_kota_id, haji_kloter_id";
+
+        $result = $this->_db->query($q_rekom)->result_array();
+
+        $output = array();
+        foreach ($result as $kres => $vres) {
+            $hitung = ceil($vres['jumlah_tua'] / 40);
+            if ($hitung > 0 && ($hitung > $vres['jumlah_paramedis'])) {
+                $output[] = array(
+                    'kota_nama' => $vres['kota_nama'],
+                    'haji_kloter_id' => $vres['haji_kloter_id'],
+                    'jumlah_tua' => $vres['jumlah_tua'],
+                    'jumlah_paramedis' => $vres['jumlah_paramedis'],
+                    'kebutuhan' => $hitung,
+                );
+            }
+            continue;
+        }
+        return $output;
+    }
+
+    public function getDataFromDB()
+    {
+        $query = $this->_queryGetData();
+        $d_kes = $this->_db->query($query);
         $d_kes = $d_kes->result();
         return $d_kes;
 
@@ -448,7 +486,7 @@ class LibraryTreemap
         $rows .= "<tbody>";
         foreach ($items as $key => $item) {
             $rows .=
-                "<tr><th>{$key}</th><td>: {$item}</td></tr>";
+            "<tr><th>{$key}</th><td>: {$item}</td></tr>";
         }
         $rows . "</tbody>";
         $rows .= $close_tag;
@@ -467,7 +505,7 @@ class LibraryTreemap
         $rows .= "<tbody>";
         foreach ($data as $k => $v) {
             $rows .=
-                "<tr><th>{$k}</th><td>: {$v}</td></tr>";
+            "<tr><th>{$k}</th><td>: {$v}</td></tr>";
         }
         $rows . "</tbody>";
         $rows .= $closeTag;
@@ -477,13 +515,13 @@ class LibraryTreemap
         $openTag = "<table class=\"table table-striped\"", $closeTag = "</table>") {
         $rows = "<div class=\"card\">";
         $rows .= "<div class=\"card-body p-0\">
-    <div class=\"table-responsive table-invoice\">";
+        <div class=\"table-responsive table-invoice\">";
         $rows .= $openTag;
         $rows .= "<thead>";
         $rows .= "<tr>";
         foreach ($data['header'] as $k => $v) {
             $rows .=
-                "<th>{$v}</th>";
+            "<th>{$v}</th>";
         }
         $rows .= "</tr>";
         $rows .= "</thead>";
