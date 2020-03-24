@@ -168,7 +168,7 @@
 										
 
 										<div class="form-group">
-											<label>Kota</label>
+											<label>Kota/Kabupaten</label>
 											<select class="form-control select2" name="kota" id="kota"  >
 												<option value="">Semua</option>
 												@foreach ($data['kota'] as $kota)
@@ -208,7 +208,7 @@
 
 											<div id="example1" class="list-group col">
 												<div class="list-group-item urutan" data-value="0">
-													<i class="ion-arrow-move"></i> Data Kota</div>
+													<i class="ion-arrow-move"></i> Data Kota/Kabupaten</div>
 													<div class="list-group-item urutan" data-value="1"><i class="ion-arrow-move"></i> Data Kloter</div>
 													<div class="list-group-item urutan" data-value="2"><i class="ion-arrow-move"></i> Data Rombongan</div>
 													<div class="list-group-item urutan" data-value="3"><i class="ion-arrow-move"></i> Data Regu</div>

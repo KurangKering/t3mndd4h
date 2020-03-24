@@ -87,7 +87,7 @@ class Haji extends MY_Controller
         
 
         $this->form_validation->set_rules('nama', 'Nama Peserta', 'trim|required');
-        $this->form_validation->set_rules('paspor', 'Nomor Paspor', 'trim|required');
+        $this->form_validation->set_rules('porsi', 'Nomor Porsi', 'trim|required');
         $this->form_validation->set_rules('tahun', 'Tahun Haji', 'trim|required');
         $this->form_validation->set_rules('usia', 'Usia', 'trim|required');
         $this->form_validation->set_rules('jk', 'Jenis Kelamin', 'trim|required');
@@ -103,7 +103,7 @@ class Haji extends MY_Controller
         if (!$this->form_validation->run()) {
             $json['messages'] = array(
                 'nama' => form_error('nama', '<p class="mt-3 text-danger">', '</p>'),
-                'paspor' => form_error('paspor', '<p class="mt-3 text-danger">', '</p>'),
+                'porsi' => form_error('porsi', '<p class="mt-3 text-danger">', '</p>'),
                 'tahun' => form_error('tahun', '<p class="mt-3 text-danger">', '</p>'),
                 'usia' => form_error('usia', '<p class="mt-3 text-danger">', '</p>'),
                 'jk' => form_error('jk', '<p class="mt-3 text-danger">', '</p>'),
@@ -118,7 +118,7 @@ class Haji extends MY_Controller
         } else {
             $postData = array(
                 'haji_nama' => $post['nama'],
-                'haji_nomor_paspor' => $post['paspor'],
+                'haji_nomor_porsi' => $post['porsi'],
                 'haji_tahun' => $post['tahun'],
                 'haji_usia' => $post['usia'],
                 'haji_jk' => $post['jk'],
@@ -146,7 +146,7 @@ class Haji extends MY_Controller
         $post = $this->input->post();
 
         $this->form_validation->set_rules('nama', 'Nama Peserta', 'trim|required');
-        $this->form_validation->set_rules('paspor', 'Nomor Paspor', 'trim|required');
+        $this->form_validation->set_rules('porsi', 'Nomor Porsi', 'trim|required');
         $this->form_validation->set_rules('tahun', 'Tahun Haji', 'trim|required');
         $this->form_validation->set_rules('usia', 'Usia', 'trim|required');
         $this->form_validation->set_rules('jk', 'Jenis Kelamin', 'trim|required');
@@ -162,7 +162,7 @@ class Haji extends MY_Controller
         if (!$this->form_validation->run()) {
             $json['messages'] = array(
                'nama' => form_error('nama', '<p class="mt-3 text-danger">', '</p>'),
-               'paspor' => form_error('paspor', '<p class="mt-3 text-danger">', '</p>'),
+               'porsi' => form_error('porsi', '<p class="mt-3 text-danger">', '</p>'),
                'tahun' => form_error('tahun', '<p class="mt-3 text-danger">', '</p>'),
                'usia' => form_error('usia', '<p class="mt-3 text-danger">', '</p>'),
                'jk' => form_error('jk', '<p class="mt-3 text-danger">', '</p>'),
@@ -177,7 +177,7 @@ class Haji extends MY_Controller
         } else {
             $postData = array(
              'haji_nama' => $post['nama'],
-             'haji_nomor_paspor' => $post['paspor'],
+             'haji_nomor_porsi' => $post['porsi'],
              'haji_tahun' => $post['tahun'],
              'haji_usia' => $post['usia'],
              'haji_jk' => $post['jk'],

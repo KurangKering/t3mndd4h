@@ -18,7 +18,7 @@
 
       @if ($user['role'] == "prov")
 
-      <li><a class="nav-link" href="{{ base_url('data-kota') }}"><i class="far fa-square"></i> <span>Data Kota</span></a></li>
+      <li><a class="nav-link" href="{{ base_url('data-kota') }}"><i class="far fa-square"></i> <span>Data Kota/Kabupaten</span></a></li>
       @endif
 
 

@@ -9,7 +9,7 @@
 @section('content')
 <section class="section">
 	<div class="section-header">
-		<h1>Data Kota</h1>
+		<h1>Data Kota/Kabupaten</h1>
 		<div class="section-header-breadcrumb">
 			<div class="breadcrumb-item active"></div>
 		</div>
