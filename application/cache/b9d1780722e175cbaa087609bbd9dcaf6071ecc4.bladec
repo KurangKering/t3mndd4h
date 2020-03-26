@@ -28,7 +28,16 @@ $user = $CI->session->userdata('auth');
  width: 1%;
  white-space: nowrap;
  }
- 
+ .main-sidebar .sidebar-brand {
+ text-align: left;
+ margin-left: 10px;
+ }
+ .main-sidebar .sidebar-brand img{
+ width: 60px;
+ }
+ .main-sidebar .sidebar-brand a{
+ margin-left: 10px;
+ }
 	</style>
 
 </head>

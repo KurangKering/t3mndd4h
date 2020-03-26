@@ -1,10 +1,13 @@
 <div class="main-sidebar sidebar-style-2">
   <aside id="sidebar-wrapper">
     <div class="sidebar-brand">
-      <a href="{{ base_url('index.html') }}">Haji</a>
+      <img src="{{ base_url('assets/img/logo.png') }}" alt="">
+      <a href="{{ base_url('#') }}">
+      SISTEM HAJI
+    </a>
     </div>
     <div class="sidebar-brand sidebar-brand-sm">
-      <a href="{{ base_url('index.html') }}">Hj</a>
+      <a href="{{ base_url('#') }}">Hj</a>
     </div>
     <ul class="sidebar-menu">
 

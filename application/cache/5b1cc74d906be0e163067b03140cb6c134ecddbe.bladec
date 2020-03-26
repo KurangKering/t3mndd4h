@@ -1,10 +1,13 @@
 <div class="main-sidebar sidebar-style-2">
  <aside id="sidebar-wrapper">
  <div class="sidebar-brand">
- <a href="<?php echo static::e(base_url('index.html')); ?>">Haji</a>
+ <img src="<?php echo static::e(base_url('assets/img/logo.png')); ?>" alt="">
+ <a href="<?php echo static::e(base_url('#')); ?>">
+ SISTEM HAJI
+ </a>
  </div>
  <div class="sidebar-brand sidebar-brand-sm">
- <a href="<?php echo static::e(base_url('index.html')); ?>">Hj</a>
+ <a href="<?php echo static::e(base_url('#')); ?>">Hj</a>
  </div>
  <ul class="sidebar-menu">
 

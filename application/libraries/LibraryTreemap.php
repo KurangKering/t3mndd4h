@@ -424,12 +424,33 @@ class LibraryTreemap
         $output = array();
         $conditions = $this->_pure_cond;
 
-        if (isset($conditions['jk']) || isset($conditions['usia']) || isset($conditions['status'])) {
-            
+        if (!isset($conditions['usia']) || $conditions['usia'] != '2') {
             return $output;
         }
 
-        $q_get_data = $this->_queryGetData();
+        $ids_top = null;
+        if ($this->_top_data) {
+            $ids_top = $this->getIdsTopData($this->_top_data);
+        }
+        $this->_db->select('hj.*, kt.*, pr.*');
+        if ($conditions) {
+            if (isset($conditions['tahun'])) {
+                $this->_db->where('hj.haji_tahun', $conditions['tahun']);
+            }
+            if (isset($conditions['kota'])) {
+                $this->_db->where('hj.haji_kota_id', $conditions['kota']);
+            }
+        }
+        if (!empty($ids_top)) {
+            $this->_db->where_in('hj.haji_kota_id', $ids_top, false);
+        }
+        $this->_db->from('haji hj');
+        $this->_db->join('kota kt', 'hj.haji_kota_id = kt.kota_id');
+        $this->_db->join('provinsi pr', 'kt.kota_provinsi_id = pr.provinsi_id');
+        $query = $this->_db->get_compiled_select();
+
+
+        $q_get_data = $query;
         $q_rekom = "SELECT 
         SUM(CASE when haji_usia > 64 then 1 ELSE 0 END) jumlah_tua,
         SUM(CASE when haji_status_jemaah = 8 then 1 ELSE 0 END) jumlah_paramedis,
