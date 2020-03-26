@@ -421,6 +421,14 @@ class LibraryTreemap
 
     private function _getRekomendasi() 
     {
+        $output = array();
+        $conditions = $this->_pure_cond;
+
+        if (isset($conditions['jk']) || isset($conditions['usia']) || isset($conditions['status'])) {
+            
+            return $output;
+        }
+
         $q_get_data = $this->_queryGetData();
         $q_rekom = "SELECT 
         SUM(CASE when haji_usia > 64 then 1 ELSE 0 END) jumlah_tua,
@@ -432,7 +440,6 @@ class LibraryTreemap
 
         $result = $this->_db->query($q_rekom)->result_array();
 
-        $output = array();
         foreach ($result as $kres => $vres) {
             $hitung = ceil($vres['jumlah_tua'] / 40);
             if ($hitung > 0 && ($hitung > $vres['jumlah_paramedis'])) {

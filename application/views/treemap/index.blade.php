@@ -575,7 +575,7 @@
 							dataLabels: {
 								enabled: true,
 								style: {
-									fontSize: "14px",
+									fontSize: "20px",
 							// textOutline: 0,
 
 
