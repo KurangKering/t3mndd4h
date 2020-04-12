@@ -134,10 +134,7 @@ $autoload['language'] = array();
 */
 $autoload['model'] = array(
 	'M_Haji',
-	'M_Kloter',
 	'M_Kota',
 	'M_Provinsi',
-	'M_Regu',
-	'M_Rombongan',
 	'M_Pengguna',
 );

@@ -10,6 +10,11 @@
 	.DTFC_LeftFootWrapper {
  display:none;
 	}
+
+
+	.search-input {
+ width: 100%;
+	}
 </style>
 <?php $this->stopSection(); ?>
 <?php $this->startSection('content'); ?>
@@ -336,13 +341,17 @@
  return;
  } 
  else {
- $(this).html( '<input type="text" placeholder="Cari '+title+'" />' );
+ $(this).html( '<input class="" type="text" placeholder="Cari '+title+'" />' );
  return;
  }
  $(this).html( select );
 
 
  } );
+
+ $("input[placeholder]").each(function () {
+ $(this).attr('size', $(this).attr('placeholder').length);
+ });
 
  $tableHaji = $('#table-haji').DataTable({ 
  "lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
@@ -377,7 +386,7 @@
  <?php endif; ?>
  ],
  'columnDefs': [
-
+ 
  {
  "targets": -1,
  "className": "action-no-wrap",

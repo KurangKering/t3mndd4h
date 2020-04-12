@@ -273,12 +273,27 @@ class Haji extends MY_Controller
 
         $mColArray  = $this->input->post('columns');
         // $this->dt->filter('haji_tahun', 2020);
+        // 
+        $fieldLike = array(
+            'haji_id',
+            'haji_nomor_porsi',
+            'haji_nomor_porsi',
+            'haji_nama',
+            'haji_usia',
+        );
         
         for ($i = 0; $i < count($mColArray); $i++) {
 
             if ($mColArray[$i]['searchable'] == 'true' && $mColArray[$i]['search']['value']) {
+                if (in_array($mColArray[$i]['name'], $fieldLike)) {
+                    $this->dt->like($mColArray[$i]['name'], $mColArray[$i]['search']['value'] );
 
-                $this->dt->filter($mColArray[$i]['name'], $mColArray[$i]['search']['value'] );
+                } else {
+
+                    $this->dt->filter($mColArray[$i]['name'], $mColArray[$i]['search']['value'] );
+                }
+
+
             }
 
         }

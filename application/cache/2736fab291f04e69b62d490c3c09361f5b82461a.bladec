@@ -5,15 +5,23 @@
  <meta charset="UTF-8">
  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
  <title>Login &mdash;</title>
-
+ <link rel="stylesheet" href="<?php echo static::e(base_url('assets/modules/bootstrap/css/bootstrap.min.css')); ?>">
+ <link rel="stylesheet" href="<?php echo static::e(base_url('assets/modules/fontawesome/css/all.min.css')); ?>">
  <style>
+ .field-icon {
+ float: right;
+ margin-left: -25px;
+ margin-top: 10px;
+ position: relative;
+ z-index: 2;
+ }
  body{
  margin: 0;
  padding: 0;
  background: url(<?php echo static::e(base_url('assets/img/398368.jpg')); ?>) 
  no-repeat center center fixed;
  font-family: sans-serif;
- 
+
 
  -webkit-background-size: cover;
  -moz-background-size: cover;
@@ -93,9 +101,9 @@
  }
 
  </style>
-</head>
+ </head>
 
-<body>
+ <body>
  <div class="login-box">
  <img src="<?php echo static::e(base_url('assets/img/logo.png')); ?>" class="avatar">
  <h1>Login Page <br> Sistem Informasi Haji</h1>
@@ -103,7 +111,9 @@
  <p>Username</p>
  <input type="text" required id="username" name="username" placeholder="">
  <p>Password</p>
- <input type="password" required id="password" name="password" placeholder="">
+ <input id="password" type="password" required  name="password" value="">
+ <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+
  <input type="submit" name="submit" value="Login">
  </form>
 
@@ -177,8 +187,17 @@
 
  });
 
+ $(".toggle-password").click(function() {
 
+ $(this).toggleClass("fa-eye fa-eye-slash");
+ var input = $($(this).attr("toggle"));
+ if (input.attr("type") == "password") {
+ input.attr("type", "text");
+ } else {
+ input.attr("type", "password");
+ }
+ });
  });
  </script>
-</body>
-</html>
+ </body>
+ </html>

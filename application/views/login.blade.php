@@ -5,15 +5,23 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
   <title>Login &mdash;</title>
-
+  <link rel="stylesheet" href="{{ base_url('assets/modules/bootstrap/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ base_url('assets/modules/fontawesome/css/all.min.css') }}">
   <style>
+    .field-icon {
+      float: right;
+      margin-left: -25px;
+      margin-top: 10px;
+      position: relative;
+      z-index: 2;
+    }
     body{
       margin: 0;
       padding: 0;
       background: url({{ base_url('assets/img/398368.jpg') }}) 
       no-repeat center center fixed;
       font-family: sans-serif;
-     
+
 
       -webkit-background-size: cover;
       -moz-background-size: cover;
@@ -80,105 +88,116 @@
       cursor: pointer;
       background: #39dc79;
       color: #000;
-    }*/
+      }*/
 
-    .login-box a{
-      text-decoration: none;
-      font-size: 14px;
-      color: #fff;
-    }
-    .login-box a:hover
-    {
-      color: #39dc79;
-    }
+      .login-box a{
+        text-decoration: none;
+        font-size: 14px;
+        color: #fff;
+      }
+      .login-box a:hover
+      {
+        color: #39dc79;
+      }
 
-  </style>
-</head>
+    </style>
+  </head>
 
-<body>
-  <div class="login-box">
-    <img src="{{ base_url('assets/img/logo.png') }}" class="avatar">
-    <h1>Login Page <br> Sistem Informasi Haji</h1>
-    <form id="form-login">
-      <p>Username</p>
-      <input type="text" required id="username" name="username" placeholder="">
-      <p>Password</p>
-      <input type="password" required id="password" name="password" placeholder="">
-      <input type="submit" name="submit" value="Login">
-    </form>
+  <body>
+    <div class="login-box">
+      <img src="{{ base_url('assets/img/logo.png') }}" class="avatar">
+      <h1>Login Page <br> Sistem Informasi Haji</h1>
+      <form id="form-login">
+        <p>Username</p>
+        <input type="text" required id="username" name="username" placeholder="">
+        <p>Password</p>
+        <input id="password" type="password" required  name="password" value="">
+        <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 
-
-  </div>
-
-  <!-- General JS Scripts -->
-  <script src="{{ base_url('assets/modules/jquery.min.js') }}"></script>
-  <script src="{{ base_url('assets/modules/popper.js') }}"></script>
-  <script src="{{ base_url('assets/modules/tooltip.js') }}"></script>
-  <script src="{{ base_url('assets/modules/bootstrap/js/bootstrap.min.js') }}"></script>
-  <script src="{{ base_url('assets/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
-  <script src="{{ base_url('assets/axios.min.js') }}"></script>
-  <script src="{{ base_url('assets/sweetalert2.all.min.js') }}"></script>
-  <script src="{{ base_url('assets/modules/moment.min.js') }}"></script>
-  <script src="{{ base_url('assets/js/stisla.js') }}"></script>
-
-  <!-- JS Libraies -->
-
-  <!-- Page Specific JS File -->
-
-  <!-- Template JS File -->
-
-  <script>
-    $(function() {
-
-      $btn_login = $("#btn-login");
-      $username = $("#username");
-      $password = $("#password");
-
-      $("#form-login").submit(function(e) {
-
-        e.preventDefault();
-
-        $(this).find(':submit').attr('disabled','disabled');
+        <input type="submit" name="submit" value="Login">
+      </form>
 
 
-        let post_data = {
-          username: $username.val(),
-          password: $password.val(),
-        };
+    </div>
 
-        post_data = Object.keys(post_data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(post_data[key])).join('&')
+    <!-- General JS Scripts -->
+    <script src="{{ base_url('assets/modules/jquery.min.js') }}"></script>
+    <script src="{{ base_url('assets/modules/popper.js') }}"></script>
+    <script src="{{ base_url('assets/modules/tooltip.js') }}"></script>
+    <script src="{{ base_url('assets/modules/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ base_url('assets/modules/nicescroll/jquery.nicescroll.min.js') }}"></script>
+    <script src="{{ base_url('assets/axios.min.js') }}"></script>
+    <script src="{{ base_url('assets/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ base_url('assets/modules/moment.min.js') }}"></script>
+    <script src="{{ base_url('assets/js/stisla.js') }}"></script>
 
-        axios.post("{{ base_url("auth/login") }}", post_data)
-        .then((res) => {
-          $(this).find(':submit').attr('disabled',false);
+    <!-- JS Libraies -->
+
+    <!-- Page Specific JS File -->
+
+    <!-- Template JS File -->
+
+    <script>
+      $(function() {
+
+        $btn_login = $("#btn-login");
+        $username = $("#username");
+        $password = $("#password");
+
+        $("#form-login").submit(function(e) {
+
+          e.preventDefault();
+
+          $(this).find(':submit').attr('disabled','disabled');
 
 
-          response = res.data;
+          let post_data = {
+            username: $username.val(),
+            password: $password.val(),
+          };
 
-          if (response.success == 0) {
-           Swal.fire({
-            title: 'Gagal!',
-            text: response.message,
-            icon: 'error',
-            timer: 1000,
-            showConfirmButton: false,
+          post_data = Object.keys(post_data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(post_data[key])).join('&')
 
-          });
-         } else {
-          window.location.href = "{{ base_url('') }}";
-        }
+          axios.post("{{ base_url("auth/login") }}", post_data)
+          .then((res) => {
+            $(this).find(':submit').attr('disabled',false);
 
-      })
-        .catch(() => {
-          $(this).find(':submit').attr('disabled',false);
 
+            response = res.data;
+
+            if (response.success == 0) {
+             Swal.fire({
+              title: 'Gagal!',
+              text: response.message,
+              icon: 'error',
+              timer: 1000,
+              showConfirmButton: false,
+
+            });
+           } else {
+            window.location.href = "{{ base_url('') }}";
+          }
 
         })
+          .catch(() => {
+            $(this).find(':submit').attr('disabled',false);
 
+
+          })
+
+        });
+
+        $(".toggle-password").click(function() {
+
+          $(this).toggleClass("fa-eye fa-eye-slash");
+          var input = $($(this).attr("toggle"));
+          if (input.attr("type") == "password") {
+            input.attr("type", "text");
+          } else {
+            input.attr("type", "password");
+          }
+        });
       });
-
-
-    });
-  </script>
-</body>
-</html>
+    </script>
+  </body>
+  </html>
