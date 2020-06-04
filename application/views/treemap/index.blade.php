@@ -228,12 +228,12 @@
 
 				<div class="col-12">
 					<div id="accordion-treemap">
-						<div class="accordion">
+						<div class="accordion" id="header-card-container">
 							<div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-3" aria-expanded="true">
 								<h4>Treemap Jemaah Haji</h4>
 							</div>
 							<div class="accordion-body collapse show" id="panel-body-3" data-parent="#accordion-treemap">
-								<div class="card">
+								<div class="card" id="card-container">
 
 									<div class="card-body">
 										<div class="div-btn" style="background-color: red;">
@@ -251,10 +251,8 @@
 
 										<figure class="highcharts-figure">
 
-											<div id="parent-container">
-												<div id="container" >
-													
-												</div>
+											<div id="container" >
+
 											</div>
 
 										</figure>
@@ -408,10 +406,17 @@
 			let sortable = null;
 			let isRequesting = false;
 			let widthContainer = $("#container").width();
-			let heighContainer = $("#container").height();
+			let widthCard = $("#card-container").width();
+			let widthHeaderCard = $("#header-card-container").width();
 
 			$("#container").css({
 				width: widthContainer,
+			});
+			$("#card-container").css({
+				width: widthCard,
+			});
+				$("#header-card-container").css({
+				width: widthHeaderCard,
 			});
 
 
