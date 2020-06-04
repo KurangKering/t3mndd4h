@@ -1,4 +1,8 @@
 <?php $_shouldextend[1]=1; ?>
+<?php $this->startSection('meta'); ?>
+<meta content="initial-scale=0.1" name="viewport">
+
+<?php $this->stopSection(); ?>
 <?php $this->startSection('css-export'); ?>
 <link rel="stylesheet" href="<?php echo static::e(base_url("assets/modules/datatables/datatables.min.css")); ?>">
 <link rel="stylesheet" href="<?php echo static::e(base_url("assets/modules/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css")); ?>">
@@ -78,10 +82,10 @@
  
  
 	}
-
 	#container {
- height:800px;
+ height: 800px;
 	}
+
 
 </style>
 <?php $this->stopSection(); ?>
@@ -247,7 +251,11 @@
 
  <figure class="highcharts-figure">
 
- <div id="container"></div>
+ <div id="parent-container">
+ <div id="container" >
+ 
+ </div>
+ </div>
 
  </figure>
  </div>
@@ -399,6 +407,14 @@
  let $tableRekomendasi = null;
  let sortable = null;
  let isRequesting = false;
+ let widthContainer = $("#container").width();
+ let heighContainer = $("#container").height();
+
+ $("#container").css({
+ width: widthContainer,
+ });
+
+
  $(function() {
  $tahun = $("select[name=tahun]");
  $usia = $("select[name=usia]");
@@ -566,10 +582,11 @@
 
  return new Promise((resolve, reject) => {
  var options = {
+ 
  series: [{
  type: 'treemap',
  alternateStartingDirection: false,
- layoutAlgorithm: 'squarified',
+ layoutAlgorithm: 'strip',
  allowDrillToNode: true,
  animation:true,
  dataLabels: {
