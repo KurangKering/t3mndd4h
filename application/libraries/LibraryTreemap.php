@@ -30,6 +30,8 @@ class LibraryTreemap
         $this->_ci->load->helper('helper');
 
         $this->_ci->load->model('M_Kota');
+        $this->_ci->load->model('M_Regu');
+        $this->_ci->load->model('M_Rombongan');
 
 
     }
@@ -129,8 +131,17 @@ class LibraryTreemap
         $w_regu   = RandomColor::many(count($d_regu));
 
         $h_kloter = hKloter();
-        $h_romb   = hRombongan();
-        $h_regu   = hRegu();
+        $h_romb   = $this->_ci->M_Rombongan->pluck('rombongan_nama', 'rombongan_id');
+        $h_regu   = $this->_ci->M_Regu->pluck('regu_nama', 'regu_id');
+
+        $h_romb   = $h_romb->map(function($q) {
+            return "Rombongan " .$q;
+
+        });
+        $h_regu   = $h_regu->map(function($q) {
+            return "Regu " .$q;
+
+        });
 
         $container    = array();
         $description  = array();

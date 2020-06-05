@@ -3,8 +3,8 @@
     <div class="sidebar-brand">
       <img src="{{ base_url('assets/img/logo.png') }}" alt="">
       <a href="{{ base_url('#') }}">
-      SISTEM HAJI
-    </a>
+        SISTEM HAJI
+      </a>
     </div>
     <div class="sidebar-brand sidebar-brand-sm">
       <a href="{{ base_url('#') }}">Hj</a>
@@ -27,10 +27,16 @@
 
       <li><a class="nav-link" href="{{ base_url('data-haji') }}"><i class="far fa-square"></i> <span>Data Haji</span></a></li>
 
+      @if ($user['role'] == "kota")
+
+      <li><a class="nav-link" href="{{ base_url('opsihaji') }}"><i class="far fa-square"></i> <span>Data Regu & Rombongan</span></a></li>
+      @endif
+
       @if ($user['role'] == "prov")
 
       <li><a class="nav-link" href="{{ base_url('treemap') }}"><i class="far fa-square"></i> <span>Treemap</span></a></li>
       @endif
+
 
       {{-- <li class="dropdown">
         <a href="{{ base_url('#') }}" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Layout</span></a>

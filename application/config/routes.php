@@ -54,6 +54,13 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 
+$route['data-regu'] = 'Regu';
+$route['data-regu/(:any)'] = 'Regu/$1';
+
+$route['data-rombongan'] = 'Rombongan';
+$route['data-rombongan/(:any)'] = 'Rombongan/$1';
+
+
 $route['data-provinsi'] = 'Provinsi';
 $route['data-provinsi/(:any)'] = 'Provinsi/$1';
 

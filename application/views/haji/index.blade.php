@@ -157,8 +157,8 @@
 								<div class="form-group">
 									<label for="message-text" class="col-form-label">Regu:</label>
 									<select  id="regu" class="form-control">
-										@foreach (hRegu() as $k => $v)
-										<option value="{{ $k }}">{{ $v }}</option>
+										@foreach ($data['regu'] as $k => $v)
+										<option value="{{ $v->regu_id }}">{{ $v->regu_nama }}</option>
 										@endforeach
 									</select>
 									<div class="error"></div>
@@ -167,8 +167,8 @@
 								<div class="form-group">
 									<label for="message-text" class="col-form-label">Rombongan:</label>
 									<select  id="rombongan" class="form-control">
-										@foreach (hRombongan() as $k => $v)
-										<option value="{{ $k }}">{{ $v }}</option>
+										@foreach ($data['rombongan'] as $k => $v)
+										<option value="{{ $v->rombongan_id }}">{{ $v->rombongan_nama }}</option>
 										@endforeach
 									</select>
 									<div class="error"></div>
@@ -375,8 +375,8 @@
 			{"data": "haji_usia", "name": "haji_usia"},
 			{"data": "haji_jk", "name": "haji_jk"},
 			{"data": "haji_status_jemaah","name":"haji_status_jemaah"},
-			{"data": "haji_regu_id","name": "haji_regu_id"},
-			{"data": "haji_rombongan_id", "name": "haji_rombongan_id"},
+			{"data": "regu_nama","name": "regu_id"},
+			{"data": "rombongan_nama", "name": "rombongan_id"},
 			{"data": "haji_kloter_id", "name": "haji_kloter_id"},
 			{"data": "kota_nama", "name":"kota_id"},
 			{"data": "provinsi_nama", "name": "provinsi_id"},

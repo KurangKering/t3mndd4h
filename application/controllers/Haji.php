@@ -13,6 +13,7 @@ class Haji extends MY_Controller
     public function index()
     {
         $haji = $this->M_Haji->get();
+
         $kota = $this->M_Kota->orderBy('kota_nama');
         $provinsi = $this->M_Provinsi;
 
@@ -26,11 +27,15 @@ class Haji extends MY_Controller
         }
         $provinsi = $provinsi->get();
 
+        $rombongan = $this->M_Rombongan->get();
+        $regu = $this->M_Regu->get();
+        $pluckRombongan = $rombongan->pluck('rombongan_nama', 'rombongan_id');
+        $pluckRegu = $regu->pluck('regu_nama', 'regu_id');
         $filterTahun = json_encode($haji->pluck('haji_tahun')->unique()->flatten());
         $filterJK = json_encode(hJK());
         $filterStatus = json_encode(hStatusJemaah());
-        $filterRegu = json_encode(hRegu());
-        $filterRombongan = json_encode(hRombongan());
+        $filterRegu = json_encode($pluckRegu->map(function($q) {return "Regu ". $q;}));
+        $filterRombongan = json_encode($pluckRombongan->map(function($q) {return "Rombongan ". $q;}));
         $filterKloter = $haji->pluck('haji_kloter_id','haji_kloter_id');
         $filterKloter = $filterKloter->map(function($q) {
             return "Kloter {$q}";
@@ -40,6 +45,8 @@ class Haji extends MY_Controller
         $filterProvinsi = json_encode($provinsi->pluck('provinsi_nama', 'provinsi_id'));
 
         $data['kota'] = $kota;
+        $data['regu'] = $regu;
+        $data['rombongan'] = $rombongan;
         $data['filterTahun'] = $filterTahun;
         $data['filterJK'] = $filterJK;
         $data['filterStatus'] = $filterStatus;
@@ -161,32 +168,32 @@ class Haji extends MY_Controller
         $json['messages'] = array();
         if (!$this->form_validation->run()) {
             $json['messages'] = array(
-               'nama' => form_error('nama', '<p class="mt-3 text-danger">', '</p>'),
-               'porsi' => form_error('porsi', '<p class="mt-3 text-danger">', '</p>'),
-               'tahun' => form_error('tahun', '<p class="mt-3 text-danger">', '</p>'),
-               'usia' => form_error('usia', '<p class="mt-3 text-danger">', '</p>'),
-               'jk' => form_error('jk', '<p class="mt-3 text-danger">', '</p>'),
-               'status' => form_error('status', '<p class="mt-3 text-danger">', '</p>'),
-               'regu' => form_error('regu', '<p class="mt-3 text-danger">', '</p>'),
-               'rombongan' => form_error('rombongan', '<p class="mt-3 text-danger">', '</p>'),
-               'kloter' => form_error('kloter', '<p class="mt-3 text-danger">', '</p>'),
-               'kota' => form_error('kota', '<p class="mt-3 text-danger">', '</p>'),
-           );
+             'nama' => form_error('nama', '<p class="mt-3 text-danger">', '</p>'),
+             'porsi' => form_error('porsi', '<p class="mt-3 text-danger">', '</p>'),
+             'tahun' => form_error('tahun', '<p class="mt-3 text-danger">', '</p>'),
+             'usia' => form_error('usia', '<p class="mt-3 text-danger">', '</p>'),
+             'jk' => form_error('jk', '<p class="mt-3 text-danger">', '</p>'),
+             'status' => form_error('status', '<p class="mt-3 text-danger">', '</p>'),
+             'regu' => form_error('regu', '<p class="mt-3 text-danger">', '</p>'),
+             'rombongan' => form_error('rombongan', '<p class="mt-3 text-danger">', '</p>'),
+             'kloter' => form_error('kloter', '<p class="mt-3 text-danger">', '</p>'),
+             'kota' => form_error('kota', '<p class="mt-3 text-danger">', '</p>'),
+         );
             $json['messages'] = array_filter($json['messages']);
             $json['success'] = 0;
         } else {
             $postData = array(
-             'haji_nama' => $post['nama'],
-             'haji_nomor_porsi' => $post['porsi'],
-             'haji_tahun' => $post['tahun'],
-             'haji_usia' => $post['usia'],
-             'haji_jk' => $post['jk'],
-             'haji_status_jemaah' => $post['status'],
-             'haji_regu_id' => $post['regu'],
-             'haji_rombongan_id' => $post['rombongan'],
-             'haji_kloter_id' => $post['kloter'],
-             'haji_kota_id' => $post['kota'],
-         );
+               'haji_nama' => $post['nama'],
+               'haji_nomor_porsi' => $post['porsi'],
+               'haji_tahun' => $post['tahun'],
+               'haji_usia' => $post['usia'],
+               'haji_jk' => $post['jk'],
+               'haji_status_jemaah' => $post['status'],
+               'haji_regu_id' => $post['regu'],
+               'haji_rombongan_id' => $post['rombongan'],
+               'haji_kloter_id' => $post['kloter'],
+               'haji_kota_id' => $post['kota'],
+           );
 
             $insertData = $this->M_Haji->insert($postData);
         }
@@ -200,21 +207,23 @@ class Haji extends MY_Controller
     public function jsonDataHaji()
     {
         $this->dt->select('
-         h.haji_id,
-         h.haji_nomor_porsi,
-         h.haji_tahun,
-         h.haji_nama,
-         h.haji_usia,
-         h.haji_kloter_id,
-         h.haji_regu_id,
-         h.haji_rombongan_id,
-         h.haji_jk,
-         h.haji_status_jemaah,
-         ko.kota_id,
-         pro.provinsi_id,
-         ko.kota_nama,
-         pro.provinsi_nama
-         ');
+           h.haji_id,
+           h.haji_nomor_porsi,
+           h.haji_tahun,
+           h.haji_nama,
+           h.haji_usia,
+           h.haji_kloter_id,
+           h.haji_regu_id,
+           re.regu_nama,
+           h.haji_rombongan_id,
+           rom.rombongan_nama,
+           h.haji_jk,
+           h.haji_status_jemaah,
+           ko.kota_id,
+           pro.provinsi_id,
+           ko.kota_nama,
+           pro.provinsi_nama
+           ');
         $this->dt->from('haji h');
 
         if ($this->auth['role'] == "prov") {
@@ -229,6 +238,12 @@ class Haji extends MY_Controller
 
         $this->dt->join('provinsi pro',
             'ko.kota_provinsi_id = pro.provinsi_id');
+
+        $this->dt->join('regu re',
+            'h.haji_regu_id = re.regu_id');
+
+        $this->dt->join('rombongan rom',
+            'h.haji_rombongan_id = rom.rombongan_id');
 
         $this->dt->add_column('nomor', '');
 
@@ -246,15 +261,15 @@ class Haji extends MY_Controller
 
         function callback_regu($regu)
         {
-            return hRegu($regu);
+            return "Regu ". $regu;
         }
-        $this->dt->edit_column('haji_regu_id', '$1', "callback_regu(haji_regu_id)");
+        $this->dt->edit_column('regu_nama', '$1', "callback_regu(regu_nama)");
 
         function callback_rombongan($rombongan)
         {
-            return hRombongan($rombongan);
+            return "Rombongan ". $rombongan;
         }
-        $this->dt->edit_column('haji_rombongan_id', '$1', "callback_rombongan(haji_rombongan_id)");
+        $this->dt->edit_column('rombongan_nama', '$1', "callback_rombongan(rombongan_nama)");
 
         function callback_kloter($kloter)
         {
@@ -276,7 +291,6 @@ class Haji extends MY_Controller
         // 
         $fieldLike = array(
             'haji_id',
-            'haji_nomor_porsi',
             'haji_nomor_porsi',
             'haji_nama',
             'haji_usia',
