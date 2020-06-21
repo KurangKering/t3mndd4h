@@ -299,13 +299,13 @@
 
 				</div>
 
-				{{-- <div class="col-12">
-					<div id="accordion-table">
+				<div class="col-12">
+					<div id="accordion-table-haji">
 						<div class="accordion">
-							<div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-2" aria-expanded="true">
+							<div class="accordion-header" role="button" data-toggle="collapse" data-target="#panel-body-haji" aria-expanded="true">
 								<h4>Table Jemaah Haji</h4>
 							</div>
-							<div class="accordion-body collapse show" id="panel-body-2" data-parent="#accordion-table">
+							<div class="accordion-body collapse show" id="panel-body-haji" data-parent="#accordion-table-haji">
 								<div class="card">
 
 									<div class="card-body">
@@ -339,7 +339,7 @@
 					</div>
 
 
-				</div> --}}
+				</div>
 			</div>
 
 		</section>
@@ -403,6 +403,7 @@
 			var $status = null;
 			var $urutan = [];
 			let $tableRekomendasi = null;
+			let $tableHaji = null;
 			let sortable = null;
 			let isRequesting = false;
 			let widthContainer = $("#container").width();
@@ -415,7 +416,7 @@
 			$("#card-container").css({
 				width: widthCard,
 			});
-				$("#header-card-container").css({
+			$("#header-card-container").css({
 				width: widthHeaderCard,
 			});
 
@@ -445,6 +446,28 @@
 					],
 
 				});
+				$tableHaji = $('#table-haji').DataTable({ 
+					"lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+					"bAutoWidth": false ,
+					scrollX:        true,
+					scrollCollapse: true,
+					"order": [], 
+					
+					"columns": [
+					{ "data": "haji_nomor_porsi" },
+					{ "data": "haji_tahun"       },
+					{ "data": "haji_nama"        },
+					{ "data": "haji_usia"        },
+					{ "data": "jenis_kelamin"    },
+					{ "data": "status_jemaah"    },
+					{ "data": "regu_nama"        },
+					{ "data": "rombongan_nama"   },
+					{ "data": "haji_kloter_id"   },
+					{ "data": "kota_nama"        },
+					{ "data": "provinsi_nama"    },
+					],
+
+				});
 
 				generateHighTreemap()
 				.then(resp => {
@@ -461,6 +484,14 @@
 							$tableRekomendasi.clear();
 							$tableRekomendasi.rows.add(isitable);
 							$tableRekomendasi.draw();
+						}
+
+						if (r.table) 
+						{
+
+							$tableHaji.clear();
+							$tableHaji.rows.add(r.table);
+							$tableHaji.draw();
 						}
 
 						dataSet = points.filter(function($el) {
@@ -572,6 +603,14 @@
 						$tableRekomendasi.rows.add(isitable);
 						$tableRekomendasi.draw();
 					}
+
+					if (r.table) 
+					{
+
+						$tableHaji.clear();
+						$tableHaji.rows.add(r.table);
+						$tableHaji.draw();
+					}
 					dataSet = points.filter(function($el) {
 						return $el.parentt == "";
 					});
@@ -612,7 +651,7 @@
 					hover: {
 						color:'red'
 					},
-					borderWidth: 3,
+					borderWidth: 0.5,
 					borderColor: "white",
 
 					data:[],

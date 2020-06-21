@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class OpsiHaji extends MY_Controller
+class Opsihaji extends MY_Controller
 {
     public function __construct()
     {

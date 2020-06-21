@@ -21,7 +21,7 @@ class LibraryTreemap
 
     public function __construct($params)
     {
-        $this->_ci              = &get_instance();
+        $this->_ci       = &get_instance();
         $this->_db       = $this->_ci->db;
         $this->_top_data = $params['top_data'];
         $this->_urutan   = $params['urutan'];
@@ -32,7 +32,6 @@ class LibraryTreemap
         $this->_ci->load->model('M_Kota');
         $this->_ci->load->model('M_Regu');
         $this->_ci->load->model('M_Rombongan');
-
 
     }
 
@@ -48,9 +47,9 @@ class LibraryTreemap
         $this->start();
 
         if ($this->_result_data) {
-            $array_data['data']     = array_values($this->_result_data);
-            $array_data['rekomendasi']     = ($this->_getRekomendasi());
-            // $array_data['table']    = $this->_datatable;
+            $array_data['data']        = array_values($this->_result_data);
+            $array_data['rekomendasi'] = ($this->_getRekomendasi());
+            $array_data['table']    = $this->_datatable;
             $array_data['subtitle'] = $this->makeSubtitle();
         }
 
@@ -134,12 +133,12 @@ class LibraryTreemap
         $h_romb   = $this->_ci->M_Rombongan->pluck('rombongan_nama', 'rombongan_id');
         $h_regu   = $this->_ci->M_Regu->pluck('regu_nama', 'regu_id');
 
-        $h_romb   = $h_romb->map(function($q) {
-            return "Rombongan " .$q;
+        $h_romb = $h_romb->map(function ($q) {
+            return "Rombongan " . $q;
 
         });
-        $h_regu   = $h_regu->map(function($q) {
-            return "Regu " .$q;
+        $h_regu = $h_regu->map(function ($q) {
+            return "Regu " . $q;
 
         });
 
@@ -348,17 +347,17 @@ class LibraryTreemap
         $this->_datatable = $d_haji->map(function ($q) {
 
             return array(
-                "haji_nomor_porsi"  => $q->haji_nomor_porsi,
-                "haji_tahun"        => $q->haji_tahun,
-                "haji_nama"         => $q->haji_nama,
-                "haji_usia"         => $q->haji_usia,
-                "jenis_kelamin"     => $q->jenis_kelamin,
-                "status_jemaah"     => $q->status_jemaah,
-                "haji_regu_id"      => $q->haji_regu_id,
-                "haji_rombongan_id" => $q->haji_rombongan_id,
-                "haji_kloter_id"    => $q->haji_kloter_id,
-                "kota_nama"         => $q->kota_nama,
-                "provinsi_nama"     => $q->provinsi_nama,
+                "haji_nomor_porsi" => $q->haji_nomor_porsi,
+                "haji_tahun"       => $q->haji_tahun,
+                "haji_nama"        => $q->haji_nama,
+                "haji_usia"        => $q->haji_usia,
+                "jenis_kelamin"    => $q->jenis_kelamin,
+                "status_jemaah"    => $q->status_jemaah,
+                "regu_nama"        => $q->regu_nama,
+                "rombongan_nama"   => $q->rombongan_nama,
+                "haji_kloter_id"   => $q->haji_kloter_id,
+                "kota_nama"        => $q->kota_nama,
+                "provinsi_nama"    => $q->provinsi_nama,
             );
 
         });
@@ -393,7 +392,7 @@ class LibraryTreemap
         }
 
         if (!empty($conditions['kota'])) {
-            $kota = $this->_ci->M_Kota->findOrFail($conditions['kota']);
+            $kota       = $this->_ci->M_Kota->findOrFail($conditions['kota']);
             $subtitle[] = 'Kota ' . $kota->kota_nama;
 
         }
@@ -406,9 +405,7 @@ class LibraryTreemap
 
         return implode(', ', $subtitle);
 
-
     }
-
 
     private function _queryGetData()
     {
@@ -416,7 +413,7 @@ class LibraryTreemap
         if ($this->_top_data) {
             $ids_top = $this->getIdsTopData($this->_top_data);
         }
-        $this->_db->select('hj.*, kt.*, pr.*');
+        $this->_db->select('hj.*, kt.*, pr.*, rg.*, rb.*');
         if ($this->_ex_cond) {
             $this->_db->where($this->_ex_cond);
         }
@@ -426,13 +423,15 @@ class LibraryTreemap
         $this->_db->from('haji hj');
         $this->_db->join('kota kt', 'hj.haji_kota_id = kt.kota_id');
         $this->_db->join('provinsi pr', 'kt.kota_provinsi_id = pr.provinsi_id');
+        $this->_db->join('regu rg', 'rg.regu_id = hj.haji_regu_id');
+        $this->_db->join('rombongan rb', 'rb.rombongan_id = hj.haji_rombongan_id');
         $query = $this->_db->get_compiled_select();
         return $query;
     }
 
-    private function _getRekomendasi() 
+    private function _getRekomendasi()
     {
-        $output = array();
+        $output     = array();
         $conditions = $this->_pure_cond;
 
         if (!isset($conditions['usia']) || $conditions['usia'] != '2') {
@@ -460,14 +459,13 @@ class LibraryTreemap
         $this->_db->join('provinsi pr', 'kt.kota_provinsi_id = pr.provinsi_id');
         $query = $this->_db->get_compiled_select();
 
-
         $q_get_data = $query;
-        $q_rekom = "SELECT 
+        $q_rekom    = "SELECT
         SUM(CASE when haji_usia > 64 then 1 ELSE 0 END) jumlah_tua,
         SUM(CASE when haji_status_jemaah = 8 then 1 ELSE 0 END) jumlah_paramedis,
-        kota_nama, 
+        kota_nama,
         haji_kloter_id
-        FROM ({$q_get_data}) rekom       
+        FROM ({$q_get_data}) rekom
         GROUP BY haji_kota_id, haji_kloter_id";
 
         $result = $this->_db->query($q_rekom)->result_array();
@@ -476,11 +474,11 @@ class LibraryTreemap
             $hitung = ceil($vres['jumlah_tua'] / 40);
             if ($hitung > 0 && ($hitung > $vres['jumlah_paramedis'])) {
                 $output[] = array(
-                    'kota_nama' => $vres['kota_nama'],
-                    'haji_kloter_id' => $vres['haji_kloter_id'],
-                    'jumlah_tua' => $vres['jumlah_tua'],
+                    'kota_nama'        => $vres['kota_nama'],
+                    'haji_kloter_id'   => $vres['haji_kloter_id'],
+                    'jumlah_tua'       => $vres['jumlah_tua'],
                     'jumlah_paramedis' => $vres['jumlah_paramedis'],
-                    'kebutuhan' => $hitung,
+                    'kebutuhan'        => $hitung,
                 );
             }
             continue;
@@ -525,7 +523,7 @@ class LibraryTreemap
         $rows .= "<tbody>";
         foreach ($items as $key => $item) {
             $rows .=
-            "<tr><th>{$key}</th><td>: {$item}</td></tr>";
+                "<tr><th>{$key}</th><td>: {$item}</td></tr>";
         }
         $rows . "</tbody>";
         $rows .= $close_tag;
@@ -544,7 +542,7 @@ class LibraryTreemap
         $rows .= "<tbody>";
         foreach ($data as $k => $v) {
             $rows .=
-            "<tr><th>{$k}</th><td>: {$v}</td></tr>";
+                "<tr><th>{$k}</th><td>: {$v}</td></tr>";
         }
         $rows . "</tbody>";
         $rows .= $closeTag;
@@ -560,7 +558,7 @@ class LibraryTreemap
         $rows .= "<tr>";
         foreach ($data['header'] as $k => $v) {
             $rows .=
-            "<th>{$v}</th>";
+                "<th>{$v}</th>";
         }
         $rows .= "</tr>";
         $rows .= "</thead>";

@@ -1,3 +1,7 @@
+@php
+$CI =& get_instance();
+$user = $CI->session->userdata('auth');
+@endphp
 @extends('layouts.layout')
 @section('css-export')
 <link rel="stylesheet" href="{{ base_url("assets/modules/datatables/datatables.min.css") }}">
@@ -22,10 +26,17 @@
 	<div class="section-header">
 		<h1>Data Haji</h1>
 		<div class="section-header-breadcrumb">
+
+			@if ($user['role'] == "kota")
+
 			<div class="breadcrumb-item active">
 				<a href="javascript:void(0)" class="btn btn-primary" id="btn-tambah">Tambah Data Haji</a>
 
 			</div>
+
+			@endif
+
+			
 		</div>
 	</div>
 
